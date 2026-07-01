@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Update Employee</title>
+
+<link rel="stylesheet"
+href="{% static 'css/update_employee.css' %}">
+
+</head>
+
+<body>
+
+<div class="update-container">
+
+<div class="update-card">
+
+<h2>Update Employee</h2>
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="form-group">
+
+<label>First Name</label>
+
+<input
+type="text"
+name="first_name"
+value="{{ employee.first_name }}"
+>
+
+</div>
+
+<div class="form-group">
+
+<label>Last Name</label>
+
+<input
+type="text"
+name="last_name"
+value="{{ employee.last_name }}"
+>
+
+</div>
+
+<div class="form-group">
+
+<label>Email</label>
+
+<input
+type="email"
+name="email"
+value="{{ employee.email }}"
+>
+
+</div>
+
+<div class="form-group">
+
+<label>Phone Number</label>
+
+<input
+type="text"
+name="phone_number"
+value="{{ employee.phone_number }}"
+>
+
+</div>
+
+<div class="form-group">
+
+<label>Branch</label>
+
+<input
+type="text"
+name="branch"
+value="{{ employee.branch }}"
+>
+
+</div>
+
+<div class="form-group">
+
+<label>Role</label>
+
+<select name="role">
+
+<option value="HR">HR</option>
+<option value="STAFF">STAFF</option>
+
+</select>
+
+</div>
+
+<button
+type="submit"
+class="save-btn">
+
+Save Changes
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>

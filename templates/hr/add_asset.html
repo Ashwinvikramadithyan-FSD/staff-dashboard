@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Asset</title>
+
+    <link rel="stylesheet"
+    href="{% static 'css/form.css' %}">
+
+</head>
+<body>
+
+<div class="form-card">
+
+    <h2>Add Asset</h2>
+
+    <form method="POST"
+    enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Save Asset
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

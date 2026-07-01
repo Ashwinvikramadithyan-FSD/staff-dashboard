@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<title>Asset Tracker Register</title>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Asset Tracker Registration</h2>
+<hr style="margin-bottom:25px;border:0;height:1px;background:#e5e7eb;">
+<form method="POST">
+    {% csrf_token %}
+
+<div class="field">
+    <label>Username</label>
+
+    {{ form.username }}
+
+    {% if form.username.errors %}
+        <div class="error">
+            {{ form.username.errors.0 }}
+        </div>
+    {% endif %}
+</div>
+<div class="field">
+    <label>First Name</label>
+
+    {{ form.first_name }}
+
+    {% if form.first_name.errors %}
+        <div class="error">
+            {{ form.first_name.errors.0 }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="field">
+    <label>Last Name</label>
+    {{ form.last_name }}
+
+    {% if form.last_name.errors %}
+        <div class="error">
+            {{ form.last_name.errors.0 }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="field">
+    <label>Email</label>
+
+    {{ form.email }}
+
+    {% if form.email.errors %}
+        <div class="error">
+            {{ form.email.errors.0 }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="field">
+    <label>Phone Number</label>
+
+    {{ form.phone_number }}
+
+    {% if form.phone_number.errors %}
+        <div class="error">
+            {{ form.phone_number.errors.0 }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="field">
+    <label>Date Of Birth</label>
+
+    {{ form.dob }}
+
+    {% if form.dob.errors %}
+        <div class="error">
+            {{ form.dob.errors.0 }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="field">
+    <label>Role</label>
+
+    {{ form.role }}
+
+    {% if form.role.errors %}
+        <div class="error">
+            {{ form.role.errors.0 }}
+        </div>
+    {% endif %}
+</div>
+
+<div id="branchDiv" class="field">
+    <label>Branch</label>
+
+    {{ form.branch }}
+
+    {% if form.branch.errors %}
+        <div class="error">
+            {{ form.branch.errors.0 }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="field">
+    <label>Password</label>
+
+    {{ form.password }}
+
+    {% if form.password.errors %}
+        <div class="error">
+            {{ form.password.errors.0 }}
+        </div>
+    {% endif %}
+</div>
+
+<div class="field">
+    <label>Confirm Password</label>
+
+    {{ form.confirm_password }}
+
+    {% if form.confirm_password.errors %}
+        <div class="error">
+            {{ form.confirm_password.errors.0 }}
+        </div>
+    {% endif %}
+</div>
+
+<button type="submit">Register</button>
+
+</form>
+
+</div>
+
+<script>
+
+const roleField =
+document.getElementById("id_role");
+
+const branchDiv =
+document.getElementById("branchDiv");
+
+function toggleBranch(){
+
+if(roleField.value === "STAFF"){
+branchDiv.style.display="block";
+}
+else{
+branchDiv.style.display="none";
+}
+
+}
+
+roleField.addEventListener(
+"change",
+toggleBranch
+);
+
+toggleBranch();
+
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const dobField =
+    document.querySelector(".dob-field");
+
+    if(dobField){
+
+        dobField.addEventListener(
+            "click",
+            function(){
+                this.showPicker();
+            }
+        )
+
+    }
+
+});
+
+
+
+</script>
+
+</body>
+</html>

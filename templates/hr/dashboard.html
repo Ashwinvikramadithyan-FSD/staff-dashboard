@@ -1,0 +1,718 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>HR Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/dashboard.css' %}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- ================= NAVBAR ================= -->
+
+    <div class="top-navbar">
+
+        <div class="logo-area">
+
+            <h2>
+                HR Dashboard
+            </h2>
+
+        </div>
+
+        <div class="user-actions">
+
+            <span class="welcome-user"
+                  data-initial="{{ request.user.first_name|slice:':1'|upper|default:'U' }}">
+                <strong>
+                    {{ request.user.first_name }}
+                    {{ request.user.last_name }}
+                </strong>
+            </span>
+
+            <a href="{% url 'logout' %}"
+               class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- ================= DASHBOARD CARDS ================= -->
+
+    <div class="stats-container">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <h2>
+                {{ total_employees }}
+            </h2>
+
+            <p>
+                Total Employees
+            </p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-laptop"></i>
+            </div>
+
+            <h2>
+                {{ total_assets}}
+            </h2>
+
+            <p>
+                Total Assets
+            </p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <h2>
+                {{ available_assets }}
+            </h2>
+
+            <p>
+                Available Assets
+            </p>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fa-solid fa-file-circle-check"></i>
+            </div>
+
+            <h2>
+                {{ pending_requests }}
+            </h2>
+
+            <p>
+                Pending Requests
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- ================= NAVIGATION ================= -->
+
+    <div class="nav-buttons">
+
+        <button
+            onclick="showSection('profile',this)"
+            class="active-btn">
+            <i class="fa-solid fa-users"></i>
+            Employees
+        </button>
+
+        <button
+            onclick="showSection('assets',this)">
+            <i class="fa-solid fa-laptop"></i>
+            Assets
+        </button>
+
+        <button
+            onclick="showSection('requests',this)">
+            <i class="fa-solid fa-file"></i>
+            Requests
+        </button>
+
+        <button
+            onclick="showSection('history',this)">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            History
+        </button>
+
+        <button
+            onclick="showSection('things',this)">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            Inventory
+        </button>
+
+    </div>
+
+    <!-- ================= EMPLOYEE SECTION ================= -->
+
+    <div id="profile" class="section">
+
+        <div class="directory-header">
+
+            <div class="directory-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div>
+                <h2>Employee Directory</h2>
+                <p>Manage all registered employees</p>
+            </div>
+
+        </div>
+
+        <table class="employee-table">
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Branch</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td>
+                        <strong>
+                            {{ employee.first_name }}
+                            {{ employee.last_name }}
+                        </strong>
+                    </td>
+                    <td>
+                        {{ employee.email }}
+                    </td>
+                    <td>
+                        {{ employee.phone_number }}
+                    </td>
+                    <td>
+                        {{ employee.branch|default:"None" }}
+                    </td>
+                    <td>
+                        {{ employee.role }}
+                    </td>
+                    <td>
+                        <div class="table-buttons">
+                            <a href="{% url 'update_employee' employee.id %}"
+                               class="update-btn">
+                                <i class="fa-solid fa-pen"></i>
+                                Update
+                            </a>
+                            <a href="{% url 'delete_employee' employee.id %}"
+                               class="delete-btn"
+                               onclick="return confirm('Delete this employee?')">
+                                <i class="fa-solid fa-trash"></i>
+                                Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6"
+                        style="text-align:center;padding:30px;">
+                        No Employees Found
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- ASSET SECTION -->
+    <!-- ================================================= -->
+
+    <div id="assets"
+         class="section"
+         style="display:none;">
+
+        <div class="asset-top-bar">
+
+            <div>
+                <h2>
+                    Asset Details
+                </h2>
+                <p>
+                    Total Assets :
+                    <strong>
+                        {{ assets.paginator.count|default:assets.count }}
+                    </strong>
+                </p>
+            </div>
+
+            <div class="asset-actions">
+
+                <form method="GET"
+                      action="{% url 'hr_dashboard' %}"
+                      style="display:flex;gap:10px;">
+
+                    <input type="hidden" name="tab" value="assets">
+
+                    <input
+                        type="text"
+                        name="search"
+                        id="searchBox"
+                        placeholder="Search Asset..."
+                        value="{{ search_query }}"
+                        class="search-box"
+                    >
+
+                    <button type="submit" class="add-asset-btn" style="white-space:nowrap;">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Search
+                    </button>
+
+                </form>
+
+                <a href="{% url 'add_asset' %}"
+                   class="add-asset-btn">
+                    <i class="fa-solid fa-plus"></i>
+                    Add Asset
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="asset-grid">
+
+        {% for asset in assets %}
+
+        <div class="asset-card page-item"
+             data-name="{{ asset.name|lower }}">
+
+            <div class="asset-image-box">
+
+                {% if asset.image %}
+                <img src="{{ asset.image.url }}"
+                     class="asset-image"
+                     alt="{{ asset.name }}">
+                {% else %}
+                <img src="{% static 'images/no-image.png' %}"
+                     class="asset-image"
+                     alt="No Image">
+                {% endif %}
+
+            </div>
+
+            <div class="asset-content">
+
+                <h3>
+                    {{ asset.name }}
+                </h3>
+
+                <p>
+                    {{ asset.description|truncatewords:15 }}
+                </p>
+
+                {% if asset.is_in_stock %}
+                <span class="stock available">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Available
+                </span>
+                {% else %}
+                <span class="stock unavailable">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    Out Of Stock
+                </span>
+                {% endif %}
+
+            </div>
+
+            <div class="asset-buttons">
+
+                <a href="{% url 'asset_detail' asset.id %}"
+                   class="view-btn">
+                    <i class="fa-solid fa-eye"></i>
+                    View
+                </a>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty-card">
+            <i class="fa-solid fa-box-open fa-3x"></i>
+            <h3>
+                No Assets Available
+            </h3>
+        </div>
+
+        {% endfor %}
+
+        </div>
+
+        {% if assets.paginator %}
+        <div class="pagination-area">
+
+            {% if assets.has_previous %}
+            <a href="?tab=assets&search={{ search_query }}&page={{ assets.previous_page_number }}"
+               class="page-btn">
+                <i class="fa-solid fa-chevron-left"></i>
+                Previous
+            </a>
+            {% else %}
+            <span class="page-btn" style="pointer-events:none;opacity:.5;">
+                <i class="fa-solid fa-chevron-left"></i>
+                Previous
+            </span>
+            {% endif %}
+
+            {% for num in assets.paginator.page_range %}
+                <a href="?tab=assets&search={{ search_query }}&page={{ num }}"
+                   class="page-num-btn {% if assets.number == num %}active{% endif %}">
+                    {{ num }}
+                </a>
+            {% endfor %}
+
+            {% if assets.has_next %}
+            <a href="?tab=assets&search={{ search_query }}&page={{ assets.next_page_number }}"
+               class="page-btn">
+                Next
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+            {% else %}
+            <span class="page-btn" style="pointer-events:none;opacity:.5;">
+                Next
+                <i class="fa-solid fa-chevron-right"></i>
+            </span>
+            {% endif %}
+
+        </div>
+
+        <p class="pagination-summary">
+            Showing page {{ assets.number }} of {{ assets.paginator.num_pages }}
+            ({{ assets.paginator.count }} assets)
+        </p>
+        {% endif %}
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- REQUESTS -->
+    <!-- ================================================= -->
+    <div id="requests" class="section" style="display:none;">
+
+        <div class="section-header">
+            <h2>
+                Submitted Asset Requests
+            </h2>
+        </div>
+
+        <table class="request-table">
+
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Asset</th>
+                    <th>Reason</th>
+                    <th>Requested Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for req in requests %}
+                <tr>
+                    <td>
+                        {{ req.employee.first_name }}
+                        {{ req.employee.last_name }}
+                    </td>
+                    <td>
+                        {{ req.asset.name }}
+                    </td>
+                    <td>
+                        {{ req.reason }}
+                    </td>
+                    <td>
+                        {{ req.requested_at|date:"d M Y" }}
+                    </td>
+                    <td>
+                        {% if req.status == "PENDING" %}
+                            <span class="status pending">
+                                Pending
+                            </span>
+                        {% elif req.status == "APPROVED" %}
+                            <span class="status approved">
+                                Approved
+                            </span>
+                        {% else %}
+                            <span class="status rejected">
+                                Rejected
+                            </span>
+                            {% if req.rejection_reason %}
+                            <br><br>
+                            <small style="color:#dc3545;">
+                                <strong>
+                                    Reason :
+                                </strong>
+                                {{ req.rejection_reason }}
+                            </small>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if req.status == "PENDING" %}
+                        <div class="request-buttons">
+                            <a href="{% url 'approve_request' req.id %}"
+                               class="approve-btn">
+                                <i class="fa-solid fa-check"></i>
+                                Approve
+                            </a>
+                            <a href="{% url 'reject_request' req.id %}"
+                               class="reject-btn">
+                                <i class="fa-solid fa-xmark"></i>
+                                Reject
+                            </a>
+                        </div>
+                        {% else %}
+                        <span class="completed-text">
+                            Completed
+                        </span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6"
+                        style="text-align:center;padding:30px;">
+                        No Requests Available
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- HISTORY -->
+    <!-- ================================================= -->
+
+    <div id="history" class="section" style="display:none;">
+
+        <div class="section-header">
+            <h2>
+                Request History
+            </h2>
+        </div>
+
+        <table class="history-table">
+
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Asset</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for req in requests %}
+                {% if req.status != "PENDING" %}
+                <tr>
+                    <td>
+                        {{ req.employee.first_name }}
+                        {{ req.employee.last_name }}
+                    </td>
+                    <td>
+                        {{ req.asset.name }}
+                    </td>
+                    <td>
+                        {% if req.status == "APPROVED" %}
+                        <span class="status approved">
+                            Approved
+                        </span>
+                        {% else %}
+                        <span class="status rejected">
+                            Rejected
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ req.requested_at|date:"d M Y" }}
+                    </td>
+                </tr>
+                {% endif %}
+            {% empty %}
+                <tr>
+                    <td colspan="4"
+                        style="text-align:center;padding:30px;">
+                        No History Available
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- INVENTORY -->
+    <!-- ================================================= -->
+
+    <div id="things" class="section" style="display:none;">
+
+        <div class="section-header">
+            <h2>
+                Inventory
+            </h2>
+            <h3>
+                Total Assets :
+                {{ assets.paginator.count|default:assets.count }}
+            </h3>
+        </div>
+
+        <table class="inventory-table">
+
+            <thead>
+                <tr>
+                    <th>Asset</th>
+                    <th>Availability</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for asset in assets %}
+                <tr>
+                    <td>
+                        {{ asset.name }}
+                    </td>
+                    <td>
+                        {% if asset.is_in_stock %}
+                        <span class="stock available">
+                            Available
+                        </span>
+                        {% else %}
+                        <span class="stock unavailable">
+                            Out Of Stock
+                        </span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2"
+                        style="text-align:center;padding:30px;">
+                        No Inventory Available
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<!-- ================= END OF HTML ================= -->
+<script>
+
+/* ============================
+   Dashboard Navigation
+============================ */
+
+function showSection(sectionId, button){
+
+    document.querySelectorAll(".section").forEach(function(section){
+        section.style.display = "none";
+    });
+
+    document.getElementById(sectionId).style.display = "block";
+
+    document.querySelectorAll(".nav-buttons button").forEach(function(btn){
+        btn.classList.remove("active-btn");
+    });
+
+    if(button){
+        button.classList.add("active-btn");
+    }
+
+    let url = new URL(window.location);
+    url.searchParams.set("tab", sectionId);
+    url.searchParams.delete("page");
+    window.history.replaceState({}, "", url);
+
+}
+
+/* ============================
+   Asset Search is now handled server-side (see hr_dashboard view)
+============================ */
+
+/* ============================
+   Default Page (remembers tab across reloads/pagination)
+============================ */
+
+window.onload = function(){
+
+    document.querySelectorAll(".section").forEach(function(section){
+        section.style.display = "none";
+    });
+
+    document.querySelectorAll(".nav-buttons button").forEach(function(btn){
+        btn.classList.remove("active-btn");
+    });
+
+    let params = new URLSearchParams(window.location.search);
+    let tab = params.get("tab") || "profile";
+
+    let targetSection = document.getElementById(tab);
+
+    if(targetSection){
+        targetSection.style.display = "block";
+    }
+    else{
+        document.getElementById("profile").style.display = "block";
+        tab = "profile";
+    }
+
+    let tabButtonMap = {
+        "profile": 0,
+        "assets": 1,
+        "requests": 2,
+        "history": 3,
+        "things": 4
+    };
+
+    let buttons = document.querySelectorAll(".nav-buttons button");
+
+    if(tabButtonMap[tab] !== undefined && buttons[tabButtonMap[tab]]){
+        buttons[tabButtonMap[tab]].classList.add("active-btn");
+    }
+
+}
+
+</script>
+</body>
+</html>

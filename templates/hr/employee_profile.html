@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Employees</title>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+<div class="content">
+
+<h1>Employee Details</h1>
+
+<table border="1" cellpadding="10">
+
+<tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Branch</th>
+    <th>Role</th>
+</tr>
+
+{% for employee in employees %}
+
+<tr>
+
+<td>
+{{ employee.first_name }}
+{{ employee.last_name }}
+</td>
+
+<td>{{ employee.email }}</td>
+
+<td>{{ employee.phone_number }}</td>
+
+<td>{{ employee.branch }}</td>
+
+<td>{{ employee.role }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

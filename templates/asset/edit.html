@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Update Asset</title>
+
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+<style>
+
+body{
+
+    background:#f4f6f9;
+
+    font-family:Arial,sans-serif;
+
+}
+
+.container{
+
+    width:500px;
+
+    margin:50px auto;
+
+}
+
+.card{
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:30px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+h2{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+.form-group{
+
+    margin-bottom:20px;
+
+}
+
+label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:bold;
+
+}
+
+input[type=text],
+textarea{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+}
+
+textarea{
+
+    resize:vertical;
+
+    min-height:120px;
+
+}
+
+input[type=file]{
+
+    margin-top:10px;
+
+}
+
+img{
+
+    width:180px;
+
+    height:180px;
+
+    object-fit:contain;
+
+    display:block;
+
+    margin:15px auto;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+}
+
+.buttons{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:30px;
+
+}
+
+button{
+
+    background:#007bff;
+
+    color:white;
+
+    border:none;
+
+    padding:12px 25px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+}
+
+button:hover{
+
+    background:#0056b3;
+
+}
+
+a{
+
+    background:#777;
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:12px 25px;
+
+    border-radius:8px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Update Asset</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<div class="form-group">
+
+<label>Asset Name</label>
+
+<input
+type="text"
+name="name"
+value="{{ asset.name }}"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>Description</label>
+
+<textarea
+name="description">{{ asset.description }}</textarea>
+
+</div>
+
+{% if asset.image %}
+
+<img src="{{ asset.image.url }}">
+
+{% endif %}
+
+<div class="form-group">
+
+<label>Change Image</label>
+
+<input
+type="file"
+name="image">
+
+</div>
+
+<div class="buttons">
+
+<button type="submit">
+
+Save Changes
+
+</button>
+
+<a href="{% url 'asset_detail' asset.id %}">
+
+Cancel
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

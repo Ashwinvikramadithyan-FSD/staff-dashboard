@@ -1,0 +1,37 @@
+from django.db import models
+from hr.models import Product
+
+class Profile(models.Model):
+    ROLE_CHOICES = [
+        ('staff', 'Staff'),
+        ('hr', 'HR'),
+    ]
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    dob = models.DateField(null=True, blank=True)
+    phone_number = models.CharField(max_length=10)
+    email = models.EmailField()
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='staff')
+
+    class Meta:
+        unique_together = ('first_name', 'last_name')
+
+    def __str__(self):
+        return f"{self.first_name} ({self.role})"
+
+class BorrowRequest(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='profile_borrow_requests')
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    take_time = models.DateTimeField()
+    bring_time = models.DateTimeField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"

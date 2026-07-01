@@ -1,0 +1,2 @@
+name_of_your_file.ext filter=lfs diff=lfs merge=lfs -text
+Config filter=lfs diff=lfs merge=lfs -text

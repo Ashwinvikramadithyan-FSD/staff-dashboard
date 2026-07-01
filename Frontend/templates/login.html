@@ -1,0 +1,99 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content%}
+
+<style> 
+    
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,700&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background-color: #050505; color: #fff; font-family: 'Playfair Display', serif; font-style: italic; margin: 0; padding: 20px; }
+   /* Registration Page Specifics - Unified */
+.registration-wrapper {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.cl { 
+    font-family: 'Playfair Display', serif; 
+    font-style: italic; 
+    text-align: center; 
+    color: #f5f0e8; 
+    margin-bottom: 30px; 
+}
+.form-container {
+    background: rgba(255, 252, 240, 0.92);
+    padding: 36px;
+    border-radius: 22px;
+    border: 1.5px solid rgba(200, 185, 145, 0.45);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    width: 100%;        /* was 2000px — bug fix */
+    max-width: 1000px;
+    margin: 0 auto;
+}
+/* ===== Form-as-table layout ===== */
+.form-container form {
+    display: table;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 14px;
+}
+
+.form-container form p {
+    display: table-row;
+}
+
+.form-container form p label {
+    display: table-cell;
+    width: 38%;
+    vertical-align: middle;
+    padding-right: 14px;
+    color: #3a2e1a;
+    font-weight: 700;
+}
+
+.form-container form p input,
+.form-container form p select {
+    display: table-cell;
+    width: 62%;
+}
+
+.form-container form input[type="submit"] {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* ===== Phone view: drop back to stacked label-over-input ===== */
+@media (max-width: 600px) {
+    .form-container { padding: 24px 18px; border-radius: 18px; }
+    .form-container form,
+    .form-container form p {
+        display: block;
+    }
+    .form-container form p label {
+        display: block;
+        width: 100%;
+        margin-bottom: 6px;
+    }
+    .form-container form p input,
+    .form-container form p select {
+        display: block;
+        width: 100%;
+    }
+    .form-container h1 { font-size: 1.25rem; }
+    .cl { font-size: 1.3rem; }
+}
+</style>
+    <h1>Login Page  </h1>
+
+    <div class="form-container">
+    <h1>Login</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Login">
+    </form>
+</div>
+    
+{% endblock %}

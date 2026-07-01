@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .ran{
+            width: ;
+        }
+    </style>
+</head>
+<body>
+    <h1> </h1>
+    
+    <h1 class="cl"> Registretion Form</h1>
+
+    
+
+    <div class="form-container">
+    <h1>Register</h1>
+    <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        
+        <p>
+            <label for="first_name">First Name</label>
+            <input type="text" name="first_name" id="first_name"  required>
+        </p>
+        
+        <p>
+            <label for="last_name">Last Name</label>
+            <input type="text" name="last_name" id="last_name" maxlength="10" required>
+        </p>
+        
+        <p>
+            <label for="dob">Date of Birth</label>
+            <input type="date" name="dob" id="dob" required>
+        </p>
+        
+        <p>
+            <label for="phone_number">Phone Number</label>
+            <input type="text" name="phone_number" id="phone_number" required>
+        </p>
+        
+        <p>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
+        </p>
+        
+        <p>
+            <label for="role">Role</label>
+            <select name="role" id="role" style="width: 100%; padding: 10px; margin-top: 5px;">
+                <option value="staff">Staff</option>
+                
+                <option value="hr">HR</option>
+            </select>
+        </p>
+        
+        <input type="submit" value="Register">
+    </form>
+</div>
+</body>
+</html>

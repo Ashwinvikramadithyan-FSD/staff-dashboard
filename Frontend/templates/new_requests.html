@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Image</th>
+        <th>Employee</th>
+        <th>Quantity</th>
+        <th>Status</th>
+    </tr>
+
+    {% for request in requests %}
+    <tr>
+        <td>{{ request.product.name }}</td>
+
+        <td>
+            <img src="{{ request.product.image.url }}" width="80">
+        </td>
+
+        <td>{{ request.employee_name }}</td>
+        <td>{{ request.quantity }}</td>
+        <td>{{ request.status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+    
+    {% endblock %}
+  

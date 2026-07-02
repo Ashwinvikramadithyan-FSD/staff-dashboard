@@ -294,6 +294,8 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     padding: 6px 10px;
     min-width: 30px;
   }
+  
+
 }
 
 /* Very small phones: shrink page-number buttons further so many pages still fit on one line */
@@ -315,6 +317,7 @@ profile-grid thead { display: none; }   /* hide header row, labels come from dat
     border-radius: 14px;
     padding: 10px 14px;
     border: 1px solid rgba(200,185,145,0.35);
+    height:250px;
   }
 
   profile-grid {
@@ -322,6 +325,10 @@ profile-grid thead { display: none; }   /* hide header row, labels come from dat
     border-bottom: 1px solid rgba(200,185,145,0.2);
     text-align: left;
     white-space: normal;
+     height: 10px;
+  }
+   .product-card{
+    height: 10px;
   }
   profile-grid:last-child { border-bottom: none; }
 
@@ -335,9 +342,14 @@ profile-grid thead { display: none; }   /* hide header row, labels come from dat
     color: #7a6a50;
     margin-bottom: 3px;
   }
-  .product-card{
+  
+  @media (max-width: 768px) {
+  ...
+  #pageNumbers button, #profilePageNumbers button { padding: 6px 10px; min-width: 30px; }
+   .product-card{
     height: 250px;
   }
+}
 
 </style>
 

@@ -279,7 +279,7 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     <button class="nav-tab" id="tab-request" onclick="switchTab('request')">Request</button>
     <button class="nav-tab" id="tab-history" onclick="switchTab('history')">History</button>
    
-    <a class="nav-tab" id="tab-history" href="{% url 'logout' %}"style="font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:600;font-style:italic;color:#2c2416;padding:7px 24px;border-radius:50px;border:1.5px solid rgba(180,160,100,0.35);text-decoration:none;">Logout</a>
+    <a class="nav-tab" href="{% url 'logout' %}">Logout</a>
   </div>
 </nav>
 
@@ -354,39 +354,40 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
   <div class="section" id="section-history">
     <h1 class="section-title">My Request History</h1>
     <p class="section-sub">Status of all your submitted borrow requests</p>
-    <table class="req-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Product</th>
-          <th>Take Time</th>
-          <th>Return Time</th>
-          <th>Submitted</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for req in borrow_requests %}
-<tr>
-  <td> Name   :   {{ req.first_name }} {{ req.last_name }}</td>
-  <td>Product : {{ req.product.name }}</td>
-  <td>Take Time : {{ req.take_time|date:"d M Y H:i" }}</td>
-  <td>Submitted : {{ req.bring_time|date:"d M Y H:i" }}</td>
-  <td>Status : {{ req.submitted_at|date:"d M Y H:i" }}</td>
-  <td><span class="badge {{ req.status }}">{{ req.get_status_display }}</span></td>
-  <td>
-    <form method="post" action="{% url 'delete_history_request' req.id %}" onsubmit="return confirm('Delete this request?');">
-      {% csrf_token %}
-      <button type="submit" style="background:rgba(150,150,150,0.25);color:#5a4a30;border:1px solid rgba(150,150,150,0.4);border-radius:50px;padding:6px 16px;cursor:pointer;font-size:0.8rem;">🗑 Delete</button>
-    </form>
-  </td>
-</tr>
-{% empty %}
-<tr><td colspan="7" style="text-align:center;padding:30px;color:#7a6a50;">No requests yet.</td></tr>
-{% endfor %}
-        
-      </tbody>
-    </table>
+   <table class="req-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Product</th>
+      <th>Take Time</th>
+      <th>Return Time</th>
+      <th>Submitted</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for req in borrow_requests %}
+    <tr>
+      <td data-label="Name">{{ req.first_name }} {{ req.last_name }}</td>
+      <td data-label="Product">{{ req.product.name }}</td>
+      <td data-label="Take Time">{{ req.take_time|date:"d M Y H:i" }}</td>
+      <td data-label="Return Time">{{ req.bring_time|date:"d M Y H:i" }}</td>
+      <td data-label="Submitted">{{ req.submitted_at|date:"d M Y H:i" }}</td>
+      <td data-label="Status"><span class="badge {{ req.status }}">{{ req.get_status_display }}</span></td>
+      <td data-label="Actions">
+        <form method="post" action="{% url 'delete_history_request' req.id %}" onsubmit="return confirm('Delete this request?');">
+          {% csrf_token %}
+          <button type="submit" style="background:rgba(150,150,150,0.25);color:#5a4a30;border:1px solid rgba(150,150,150,0.4);border-radius:50px;padding:6px 16px;cursor:pointer;font-size:0.8rem;">🗑 Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="7" style="text-align:center;padding:30px;color:#7a6a50;">No requests yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+    
   </div>
 
 </div>

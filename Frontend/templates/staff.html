@@ -41,10 +41,32 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
 .card-actions .btn-edit { background:rgba(168,216,232,0.5); color:#0d3d52; border:1px solid rgba(126,200,227,0.4); }
 .card-actions .btn-del { background:rgba(240,150,120,0.3); color:#8e3020; border:1px solid rgba(220,120,100,0.35); }
 
-/* Modal */
+/* Modal — animation forcibly disabled so nothing can slide in from any side */
+.modal-overlay,
+.modal-overlay *,
+.modal-box {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(20,14,6,0.5); backdrop-filter:blur(5px); z-index:300; align-items:center; justify-content:center; }
 .modal-overlay.open { display:flex; }
-.modal-box { background:rgba(255,252,240,0.98); border:1.5px solid rgba(200,185,145,0.5); border-radius:22px; width:100%; max-width:460px; box-shadow:0 10px 50px rgba(80,60,20,0.22); position:relative; max-height:90vh; overflow-y:auto; }
+.modal-box {
+  background:rgba(255,252,240,0.98);
+  border:1.5px solid rgba(200,185,145,0.5);
+  border-radius:22px;
+  width:100%;
+  max-width:460px;
+  box-shadow:0 10px 50px rgba(80,60,20,0.22);
+  position:relative;
+  max-height:90vh;
+  overflow-y:auto;
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* old Edge/IE */
+}
+.modal-box::-webkit-scrollbar {
+  display: none;               /* Chrome, Safari, new Edge */
+}
 .modal-preview { display:flex; align-items:center; gap:16px; padding:22px 26px 18px; border-bottom:1px solid rgba(200,185,145,0.35); background:rgba(245,235,210,0.45); border-radius:22px 22px 0 0; }
 .modal-preview img { width:68px; height:68px; object-fit:cover; border-radius:12px; }
 .prod-name { font-family:'Playfair Display',serif; font-size:0.97rem; font-weight:600; font-style:italic; color:#1e1810; }
@@ -150,6 +172,7 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
   }
 }
 
+
 /* ===== Mobile / Phone View ===== */
 @media (max-width: 768px) {
   body { padding: 10px; }
@@ -253,12 +276,19 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
           <label>First Name</label>
           <input type="text" name="first_name" required>
         </div>
+        
         <div class="form-group">
           <label>Last Name</label>
           <input type="text" name="last_name" required>
         </div>
+        
         <div class="form-group">
-          <label>Take Time</label>
+          <label>Product Name</label>
+          <input type="text" name="product" required>
+         
+        </div>
+        <div class="form-group">
+          <label >Take Time</label>
           <input type="datetime-local" name="take_time" required>
         </div>
         <div class="form-group">
@@ -278,7 +308,7 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     <button class="nav-tab" id="tab-domain" onclick="switchTab('domain')">Domain</button>
     <button class="nav-tab" id="tab-request" onclick="switchTab('request')">Request</button>
     <button class="nav-tab" id="tab-history" onclick="switchTab('history')">History</button>
-   
+
     <a class="nav-tab" href="{% url 'logout' %}">Logout</a>
   </div>
 </nav>
@@ -292,16 +322,12 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     <div class="profile-grid">
       {% for profile in profiles %}
       <div class="profile-card">
-  <h3>{{ profile.first_name }} {{ profile.last_name }}</h3>
-  <p><strong>ID:</strong> {{ profile.id }}</p>
-  <p><strong>Email:</strong> {{ profile.email }}</p>
+        <h3>{{ profile.first_name }} {{ profile.last_name }}</h3>
+        <p><strong>ID:</strong> {{ profile.id }}</p>
+        <p><strong>Email:</strong> {{ profile.email }}</p>
         <p><strong>Role:</strong> {{ profile.role }}</p>
         <p><strong>Phone:</strong> {{ profile.phone_number }}</p>
         <p><strong>Date of Birth:</strong> {{ profile.dob }}</p>
-        <div class="card-actions">
-          <a href="{% url 'update_profile' profile.id %}" class="btn-edit">Update</a>
-          <a href="{% url 'delete_profile' profile.id %}" class="btn-del" onclick="return confirm('Delete this profile?')">Delete</a>
-        </div>
       </div>
       {% empty %}
       <p style="color:#b0a080;">No profiles yet.</p>
@@ -313,7 +339,13 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
   <div class="section" id="section-request">
     <h1 class="section-title">Available Products</h1>
     <p class="section-sub">Click Request to borrow an item</p>
-    
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;color:black;">
+      <input type="text" id="productSearchInput" placeholder="Search product by name..."
+             style="flex:1; min-width:200px; color:black;padding:10px 16px; border-radius:50px; border:1.5px solid rgba(180,160,100,0.4); font-family:'Playfair Display',serif; font-style:italic; background:rgba(255,252,240,0.9);">
+      <button type="button" class="btn-submit" style="width:auto; padding:10px 24px;" onclick="searchProducts()">Search</button>
+    </div>
+    <p id="searchMessage" style="text-align:center; color:#b0a080; display:none; margin-bottom:16px;"></p>
+
     <div class="profile-grid" id="profileGrid">
       {% for product in products %}
       <div class="product-card">
@@ -329,7 +361,6 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
               onclick="openModal('{{ product.id }}','{{ product.image.url }}','{{ product.name }}','{{ product.code }}')">
               Request
             </button>
-            
             {% else %}
             <button class="btn-borrow" disabled>Not Available</button>
             {% endif %}
@@ -339,55 +370,51 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
       {% empty %}
       <p style="color:#b0a080;">No products available.</p>
       {% endfor %}
-      
     </div>
     <div class="pagination" id="profilePagination">
-    <button id="profilePrev">Previous</button>
-
-    <span id="profilePageNumbers"></span>
-
-    <button id="profileNext">Next</button>
-</div>
+      <button id="profilePrev">Previous</button>
+      <span id="profilePageNumbers"></span>
+      <button id="profileNext">Next</button>
+    </div>
   </div>
 
   <!-- History section -->
   <div class="section" id="section-history">
     <h1 class="section-title">My Request History</h1>
     <p class="section-sub">Status of all your submitted borrow requests</p>
-   <table class="req-table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Product</th>
-      <th>Take Time</th>
-      <th>Return Time</th>
-      <th>Submitted</th>
-      <th>Status</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for req in borrow_requests %}
-    <tr>
-      <td data-label="Name">{{ req.first_name }} {{ req.last_name }}</td>
-      <td data-label="Product">{{ req.product.name }}</td>
-      <td data-label="Take Time">{{ req.take_time|date:"d M Y H:i" }}</td>
-      <td data-label="Return Time">{{ req.bring_time|date:"d M Y H:i" }}</td>
-      <td data-label="Submitted">{{ req.submitted_at|date:"d M Y H:i" }}</td>
-      <td data-label="Status"><span class="badge {{ req.status }}">{{ req.get_status_display }}</span></td>
-      <td data-label="Actions">
-        <form method="post" action="{% url 'delete_history_request' req.id %}" onsubmit="return confirm('Delete this request?');">
-          {% csrf_token %}
-          <button type="submit" style="background:rgba(150,150,150,0.25);color:#5a4a30;border:1px solid rgba(150,150,150,0.4);border-radius:50px;padding:6px 16px;cursor:pointer;font-size:0.8rem;">🗑 Delete</button>
-        </form>
-      </td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="7" style="text-align:center;padding:30px;color:#7a6a50;">No requests yet.</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
-    
+    <table class="req-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Product</th>
+          <th>Take Time</th>
+          <th>Return Time</th>
+          <th>Submitted</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for req in borrow_requests %}
+        <tr>
+          <td data-label="Name">{{ req.first_name }} {{ req.last_name }}</td>
+          <td data-label="Product">{{ req.product.name }}</td>
+          <td data-label="Take Time">{{ req.take_time|date:"d M Y H:i" }}</td>
+          <td data-label="Return Time">{{ req.bring_time|date:"d M Y H:i" }}</td>
+          <td data-label="Submitted">{{ req.submitted_at|date:"d M Y H:i" }}</td>
+          <td data-label="Status"><span class="badge {{ req.status }}">{{ req.get_status_display }}</span></td>
+          <td data-label="Actions">
+            <form method="post" action="{% url 'delete_history_request' req.id %}" onsubmit="return confirm('Delete this request?');">
+              {% csrf_token %}
+              <button type="submit" style="background:rgba(150,150,150,0.25);color:#5a4a30;border:1px solid rgba(150,150,150,0.4);border-radius:50px;padding:6px 16px;cursor:pointer;font-size:0.8rem;">🗑 Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" style="text-align:center;padding:30px;color:#7a6a50;">No requests yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 
 </div>
@@ -424,97 +451,87 @@ document.getElementById('borrowModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
 
-// -------- Staff Domain Pagination --------
-
+// -------- Staff Domain Pagination + Product Search --------
 document.addEventListener("DOMContentLoaded", function () {
 
     const cards = document.querySelectorAll("#profileGrid .product-card");
-
-    const itemsPerPage = 6;
-
+    const itemsPerPage = 4;
     let currentPage = 1;
-
     const totalPages = Math.ceil(cards.length / itemsPerPage);
 
-    function showPage(page){
-
-        cards.forEach((card,index)=>{
-
-            if(index >= (page-1)*itemsPerPage &&
-               index < page*itemsPerPage){
-
-                card.style.display = "block";
-
-            }else{
-
-                card.style.display = "none";
-
-            }
-
+    function showPage(page) {
+        cards.forEach((card, index) => {
+            card.style.display = (index >= (page - 1) * itemsPerPage && index < page * itemsPerPage) ? "block" : "none";
         });
-
         updateButtons();
-
         document.getElementById("profilePrev").disabled = page === 1;
         document.getElementById("profileNext").disabled = page === totalPages;
     }
 
-    function updateButtons(){
-
+    function updateButtons() {
         const pages = document.getElementById("profilePageNumbers");
-
         pages.innerHTML = "";
-
-        for(let i=1;i<=totalPages;i++){
-
+        for (let i = 1; i <= totalPages; i++) {
             let btn = document.createElement("button");
-
             btn.innerText = i;
-
-            if(i===currentPage){
-                btn.classList.add("active");
-            }
-
-            btn.onclick = function(){
-
-                currentPage = i;
-
-                showPage(currentPage);
-
-            }
-
+            if (i === currentPage) btn.classList.add("active");
+            btn.onclick = function () { currentPage = i; showPage(currentPage); };
             pages.appendChild(btn);
-
         }
-
     }
 
-    document.getElementById("profilePrev").onclick = function(){
-
-        if(currentPage>1){
-
-            currentPage--;
-
-            showPage(currentPage);
-
-        }
-
-    }
-
-    document.getElementById("profileNext").onclick = function(){
-
-        if(currentPage<totalPages){
-
-            currentPage++;
-
-            showPage(currentPage);
-
-        }
-
-    }
+    document.getElementById("profilePrev").onclick = function () {
+        if (currentPage > 1) { currentPage--; showPage(currentPage); }
+    };
+    document.getElementById("profileNext").onclick = function () {
+        if (currentPage < totalPages) { currentPage++; showPage(currentPage); }
+    };
 
     showPage(currentPage);
 
+    // ---- Product search ----
+    window.searchProducts = function () {
+        const query = document.getElementById("productSearchInput").value.trim().toLowerCase();
+        const message = document.getElementById("searchMessage");
+        const pagination = document.getElementById("profilePagination");
+
+        if (!query) {
+            message.style.display = "block";
+            message.textContent = "Please enter a product name to search.";
+            cards.forEach(card => card.style.display = "none");
+            pagination.style.display = "none";
+            return;
+        }
+
+        let matches = 0;
+        cards.forEach(card => {
+            const name = card.querySelector(".card-name").textContent.toLowerCase();
+            if (name.includes(query)) {
+                card.style.display = "block";
+                matches++;
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        pagination.style.display = "none";
+
+        if (matches === 0) {
+            message.style.display = "block";
+            message.textContent = 'No products found for "' + query + '".';
+        } else {
+            message.style.display = "none";
+        }
+    };
+
+    document.getElementById("productSearchInput").addEventListener("input", function () {
+        if (this.value.trim() === "") {
+            document.getElementById("searchMessage").style.display = "none";
+            document.getElementById("profilePagination").style.display = "flex";
+            currentPage = 1;
+            showPage(currentPage);
+        }
+    });
 });
 </script>
 

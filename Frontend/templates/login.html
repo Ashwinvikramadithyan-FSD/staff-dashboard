@@ -85,15 +85,39 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     .cl { font-size: 1.3rem; }
 }
 </style>
-    <h1>Login Page  </h1>
 
-    <div class="form-container">
+<h1>Login Page</h1>
+
+<div class="form-container">
     <h1>Login</h1>
+
+    {% if error %}
+    <p style="color:#8e3020; background:rgba(240,150,120,0.18); border:1px solid rgba(220,120,100,0.4); border-radius:10px; padding:10px 16px; margin-bottom:16px; font-style:normal;">{{ error }}</p>
+    {% endif %}
+
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+
+        <p>
+            <label for="username">User Name</label>
+            <input type="text" name="username" id="username" value="{{ username|default:'' }}" required>
+        </p>
+
+        <p>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+        </p>
+
         <input type="submit" value="Login">
     </form>
+
+    <p style="text-align:center; margin-top:14px;">
+        <a href="{% url 'register' %}" style="text-decoration:none;">
+            <button type="button" class="btn-submit" style="width:auto; padding:10px 26px;">
+                Create an account
+            </button>
+        </a>
+    </p>
 </div>
-    
+
 {% endblock %}

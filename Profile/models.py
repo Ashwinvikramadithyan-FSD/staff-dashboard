@@ -6,18 +6,18 @@ class Profile(models.Model):
         ('staff', 'Staff'),
         ('hr', 'HR'),
     ]
+    username = models.CharField(max_length=150, unique=True)
+    password = models.CharField(max_length=128)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     dob = models.DateField(null=True, blank=True)
     phone_number = models.CharField(max_length=10)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='staff')
 
-    class Meta:
-        unique_together = ('first_name', 'last_name')
-
     def __str__(self):
-        return f"{self.first_name} ({self.role})"
+        return f"{self.username} ({self.role})"
+
 
 class BorrowRequest(models.Model):
     STATUS_CHOICES = [

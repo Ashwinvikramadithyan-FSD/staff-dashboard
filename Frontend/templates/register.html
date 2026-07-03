@@ -84,55 +84,80 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     .cl { font-size: 1.3rem; }
 }
 </style>
-
-    <h1 class="cl"> Registration Form</h1>
-
-    
-
-    <div class="form-container">
+<div class="form-container">
     <h1>Register</h1>
     <form method="POST" action="{% url 'register' %}">
         {% csrf_token %}
-        
+
         <p>
-            <label for="first_name">First Name</label>
-            <input type="text" name="first_name" id="first_name"  maxlength="70" required>
+            <label for="id_username">User Name</label>
+            {{ form.username }}
         </p>
-        
+        {% if form.username.errors %}<p style="color:#8e3020;">{{ form.username.errors.0 }}</p>{% endif %}
+
         <p>
-            <label for="last_name">Last Name</label>
-            <input type="text" name="last_name" id="last_name"maxlength="70" required>
+            <label for="id_first_name">First Name</label>
+            {{ form.first_name }}
         </p>
-        
+        {% if form.first_name.errors %}<p style="color:#8e3020;">{{ form.first_name.errors.0 }}</p>{% endif %}
+
         <p>
-            <label for="dob">Date of Birth</label>
-            <input type="date" name="dob" id="dob" required>
+            <label for="id_last_name">Last Name</label>
+            {{ form.last_name }}
         </p>
-        
+        {% if form.last_name.errors %}<p style="color:#8e3020;">{{ form.last_name.errors.0 }}</p>{% endif %}
+
         <p>
-            <label for="phone_number">Phone Number</label>
-            <input type="text" name="phone_number" id="phone_number" maxlength="10" required>
+            <label for="id_dob">Date of Birth</label>
+            {{ form.dob }}
         </p>
-        
+        {% if form.dob.errors %}<p style="color:#8e3020;">{{ form.dob.errors.0 }}</p>{% endif %}
+
         <p>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" required>
+            <label for="id_phone_number">Phone Number</label>
+            {{ form.phone_number }}
         </p>
-        
+        {% if form.phone_number.errors %}<p style="color:#8e3020;">{{ form.phone_number.errors.0 }}</p>{% endif %}
+
         <p>
-            <label for="role">Role</label>
-            <select name="role" id="role" style="width: 100%; padding: 10px; margin-top: 5px;">
-                <option value="staff">Staff</option>
-                
-                <option value="hr">HR</option>
-            </select>
+            <label for="id_email">Email</label>
+            {{ form.email }}
         </p>
-        
+        {% if form.email.errors %}<p style="color:#8e3020;">{{ form.email.errors.0 }}</p>{% endif %}
+
+        <p>
+            <label for="id_password">Password</label>
+            {{ form.password }}
+        </p>
+        {% if form.password.errors %}<p style="color:#8e3020;">{{ form.password.errors.0 }}</p>{% endif %}
+
+        <p>
+            <label for="id_confirm_password">Confirm Password</label>
+            {{ form.confirm_password }}
+        </p>
+        {% if form.confirm_password.errors %}<p style="color:#8e3020;">{{ form.confirm_password.errors.0 }}</p>{% endif %}
+
+        <p>
+            <label for="id_role">Role</label>
+            {{ form.role }}
+        </p>
+
         <input type="submit" value="Register">
     </form>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const dobField = document.getElementById("id_dob");
+    if (dobField) {
+        dobField.addEventListener("click", function () {
+            if (this.showPicker) this.showPicker();
+        });
+    }
+});
+</script>
     
     
     {% endblock %}
-    </div>
+    
     

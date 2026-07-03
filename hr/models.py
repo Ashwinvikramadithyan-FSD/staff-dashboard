@@ -4,6 +4,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=50)
     made_in = models.CharField(max_length=100)
+    product = models.CharField(max_length=100)
     material = models.CharField(max_length=100)
     available = models.BooleanField(default=True)
     image = models.ImageField(upload_to="products/")

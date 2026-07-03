@@ -49,13 +49,28 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
 /* Modal */
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(20,14,6,0.5); backdrop-filter:blur(5px); z-index:300; align-items:center; justify-content:center; }
 .modal-overlay.open { display:flex; }
-.modal-box { background:rgba(255,252,240,0.98); border:1.5px solid rgba(200,185,145,0.5); border-radius:22px; width:100%; max-width:460px; max-height:90vh; overflow-y:auto; position:relative; }
+.modal-box {
+  background:rgba(255,252,240,0.98);
+  border:1.5px solid rgba(200,185,145,0.5);
+  border-radius:22px;
+  width:100%;
+  max-width:460px;
+  box-shadow:0 10px 50px rgba(80,60,20,0.22);
+  position:relative;
+  max-height:90vh;
+  overflow-y:auto;
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* old Edge/IE */
+}
+.modal-box::-webkit-scrollbar {
+  display: none;               /* Chrome, Safari, new Edge */
+}
 .modal-preview { display:flex; align-items:center; gap:16px; padding:22px 26px 18px; border-bottom:1px solid rgba(200,185,145,0.35); background:rgba(245,235,210,0.45); }
 .modal-preview img { width:68px; height:68px; object-fit:cover; border-radius:12px; }
 .modal-close { position:absolute; top:13px; right:17px; border:none; background:none; cursor:pointer; color:#7a6a50; }
 .modal-body { padding:22px 26px 28px; }
 .form-group { margin-bottom:16px; }
-.form-group input { width:100%; padding:9px 14px; border:1.5px solid rgba(180,160,100,0.4); border-radius:10px; background:rgba(255,255,255,0.82); }
+.form-group input { width:100%; padding:9px 14px;color:black; border:1.5px solid rgba(180,160,100,0.4); border-radius:10px; background:rgba(255,255,255,0.82); }
 
 /* Table */
 .req-table { width:100%; border-collapse:collapse; margin-top:20px; background:rgba(255,252,240,0.85); border-radius:16px; overflow:hidden; }
@@ -121,9 +136,7 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
   }
 }
 
-  .form-group{
-    color: black;
-  }
+  
 /* ===== Responsive stacked tables for phone ===== */
 @media (max-width: 768px) {
   table thead { display: none; }   /* hide header row, labels come from data-label instead */
@@ -275,7 +288,9 @@ table thead { display: none; }   /* hide header row, labels come from data-label
     color: #7a6a50;
     margin-bottom: 3px;
   }
-
+ .form-row{
+  color:black;
+ }
   
 </style>
 
@@ -287,13 +302,13 @@ table thead { display: none; }   /* hide header row, labels come from data-label
     <div class="modal-preview">
       <img id="modal-img" src="" alt="">
       <div>
-        <p class="prod-name" id="modal-prod-name"></p>
-        <p class="prod-code" id="modal-prod-code"></p>
+        <p  style="color:black;"class="prod-name" id="modal-prod-name"></p>
+        <p  style="color:black;"class="prod-code" id="modal-prod-code"></p>
       </div>
     </div>
 
     <div class="modal-body">
-      <p class="modal-title">Borrow Request</p>
+      <p class="modal-title"  style="color:black;">Borrow Request</p>
       <form method="post">
         {% csrf_token %}
         <input type="hidden" name="borrow_product" value="1">
@@ -305,24 +320,24 @@ table thead { display: none; }   /* hide header row, labels come from data-label
             {{ borrow_form.first_name }}
           </div>
           <div class="form-group">
-            <label>Last Name</label>
+            <label  >Last Name</label>
             {{ borrow_form.last_name }}
           </div>
         </div>
 
         <div class="form-group">
-          <label>Product Name</label>
+          <label  style="color:black;">Product Name</label>
           <input type="text" id="modal-product-name-display" readonly
                  style="background:rgba(240,230,200,0.5); color:#5a4a30;">
         </div>
 
         <div class="form-group">
-          <label>Take Time</label>
+          <label  style="color:black;">Take Time</label>
           {{ borrow_form.take_time }}
         </div>
 
         <div class="form-group" style="margin-bottom:22px;">
-          <label>Bring Time</label>
+          <label  style="color:black;">Bring Time</label>
           {{ borrow_form.bring_time }}
         </div>
 
@@ -399,6 +414,12 @@ table thead { display: none; }   /* hide header row, labels come from data-label
   <div class="section {% if active_tab != 'forms' %}active{% endif %}" id="section-products">
     <h1 class="section-title">IT Asset Catalogue</h1>
     <p class="section-sub">Browse registered equipment and submit a borrow request</p>
+
+     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;color:black;">
+      <input type="text" id="productSearchInput" placeholder="Search product by name..."
+             style="flex:1; min-width:200px; color:black;padding:10px 16px; border-radius:50px; border:1.5px solid rgba(180,160,100,0.4); font-family:'Playfair Display',serif; font-style:italic; background:rgba(255,252,240,0.9);">
+      <button type="button" class="btn-submit" style="width:auto; padding:10px 24px;" onclick="searchProducts()">Search</button>
+    </div>
 
   <div class="product-grid" id="productGrid">
       {% for product in products %}

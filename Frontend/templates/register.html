@@ -142,9 +142,39 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
             {{ form.role }}
         </p>
 
+        <p id="branch-row">
+            <label for="id_branch">Branch</label>
+            {{ form.branch }}
+        </p>
+        {% if form.branch.errors %}<p style="color:#8e3020;">{{ form.branch.errors.0 }}</p>{% endif %}
+
         <input type="submit" value="Register">
     </form>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const roleField = document.getElementById("id_role");
+    const branchRow = document.getElementById("branch-row");
+    const branchField = document.getElementById("id_branch");
+
+    function toggleBranch() {
+        if (roleField.value === "hr") {
+            branchRow.style.display = "";
+            branchField.required = true;
+        } else {
+            branchRow.style.display = "none";
+            branchField.required = false;
+            branchField.value = "";
+        }
+    }
+
+    if (roleField) {
+        toggleBranch();
+        roleField.addEventListener("change", toggleBranch);
+    }
+});
+</script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -159,5 +189,3 @@ document.addEventListener("DOMContentLoaded", function () {
     
     
     {% endblock %}
-    
-    

@@ -356,7 +356,7 @@ table thead { display: none; }   /* hide header row, labels come from data-label
   <div class="nav-tabs">
     <button class="nav-tab active" id="tab-forms" onclick="switchTab('forms')">Forms</button>
     <button class="nav-tab" id="tab-products" onclick="switchTab('products')">Products</button>
-      <button class="nav-tab" id="tab-details" onclick="switchTab('details')">Details</button>
+      <button class="nav-tab" id="tab-details" onclick="switchTab('details')">request</button>
         <button class="nav-tab" id="tab-status" onclick="switchTab('status')">Status</button>
   </div>
 </nav>
@@ -694,7 +694,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const cards = document.querySelectorAll("#productGrid .product-card");
 
-    const itemsPerPage = 8;     // Show 6 products per page
+    const itemsPerPage = 4;     // Show 6 products per page
 
     let currentPage = 1;
 

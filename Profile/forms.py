@@ -1,3 +1,4 @@
+from datetime import date
 from django import forms
 from django.contrib.auth.hashers import make_password
 from .models import Profile
@@ -11,9 +12,14 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['username', 'first_name', 'last_name', 'dob',
-                   'phone_number', 'email', 'role', 'password', 'confirm_password']
+                   'phone_number', 'email', 'role', 'branch', 'password', 'confirm_password']
         widgets = {
-            'dob': forms.DateInput(attrs={'type': 'date', 'class': 'dob-field'}),
+            'dob': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'dob-field',
+                'max': date.today().isoformat(),
+            }),
+            'branch': forms.TextInput(attrs={'id': 'id_branch'}),
         }
 
     def clean_username(self):
@@ -28,6 +34,12 @@ class RegisterForm(forms.ModelForm):
             raise forms.ValidationError("Phone number must be exactly 10 digits.")
         return phone
 
+    def clean_dob(self):
+        dob = self.cleaned_data.get('dob')
+        if dob and dob > date.today():
+            raise forms.ValidationError("Date of Birth cannot be a future date.")
+        return dob
+
     def clean_email(self):
         email = self.cleaned_data['email']
         if Profile.objects.filter(email=email).exists():
@@ -40,6 +52,11 @@ class RegisterForm(forms.ModelForm):
         confirm = cleaned_data.get('confirm_password')
         if password and confirm and password != confirm:
             self.add_error('confirm_password', "Password and Confirm Password must be the same.")
+
+        role = cleaned_data.get('role')
+        branch = cleaned_data.get('branch')
+        if role == 'hr' and not branch:
+            self.add_error('branch', "Branch is required for the HR role.")
         return cleaned_data
 
     def save(self, commit=True):

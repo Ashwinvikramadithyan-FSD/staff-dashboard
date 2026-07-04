@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import check_password
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from .models import Profile
 from .forms import RegisterForm
 from hr.models import Product, BorrowRequest as HRBorrowRequest
@@ -44,6 +46,8 @@ def logout(request):
 def staff(request):
     profile_id = request.session.get('profile_id')
     current_profile = Profile.objects.filter(id=profile_id).first() if profile_id else None
+    borrow_error = None
+    reopen_product = None
 
     if request.method == 'POST' and 'borrow_product' in request.POST:
         if not current_profile:
@@ -53,16 +57,39 @@ def staff(request):
         last_name = request.POST.get('last_name')
         take_time = request.POST.get('take_time')
         bring_time = request.POST.get('bring_time')
+
         if product_id and first_name and take_time and bring_time:
-            HRBorrowRequest.objects.create(
-                product_id=product_id,
-                requested_by=current_profile,
-                first_name=first_name,
-                last_name=last_name,
-                take_time=take_time,
-                bring_time=bring_time,
-            )
-        return redirect('staff')
+            parsed_take = parse_datetime(take_time)
+            parsed_bring = parse_datetime(bring_time)
+
+            if parsed_take is None or parsed_bring is None:
+                borrow_error = "Please enter valid take and return times."
+            elif timezone.is_naive(parsed_take):
+                current_tz = timezone.get_current_timezone()
+                parsed_take = timezone.make_aware(parsed_take, current_tz)
+                parsed_bring = timezone.make_aware(parsed_bring, current_tz)
+
+            if borrow_error is None:
+                if parsed_take < timezone.now():
+                    borrow_error = "Take time cannot be in the past."
+                elif parsed_take > parsed_bring:
+                    borrow_error = "Take time must be less than or equal to the return time."
+
+            if borrow_error is None:
+                HRBorrowRequest.objects.create(
+                    product_id=product_id,
+                    requested_by=current_profile,
+                    first_name=first_name,
+                    last_name=last_name,
+                    take_time=take_time,
+                    bring_time=bring_time,
+                )
+                return redirect('staff')
+            else:
+                reopen_product = Product.objects.filter(id=product_id).first()
+        else:
+            borrow_error = "Please fill in all required fields."
+            reopen_product = Product.objects.filter(id=product_id).first() if product_id else None
 
     if current_profile:
         profiles = Profile.objects.filter(id=current_profile.id)
@@ -76,6 +103,7 @@ def staff(request):
     products = Product.objects.all()
     return render(request, 'staff.html', {
         'profiles': profiles, 'products': products, 'borrow_requests': borrow_requests,
+        'borrow_error': borrow_error, 'reopen_product': reopen_product,
     })
 
 

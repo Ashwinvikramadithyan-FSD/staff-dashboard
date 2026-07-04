@@ -268,6 +268,9 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     </div>
     <div class="modal-body">
       <p class="modal-title">Borrow Request</p>
+      {% if borrow_error %}
+      <p style="color:#8e3020; background:rgba(142,48,32,0.1); border:1px solid rgba(142,48,32,0.35); border-radius:10px; padding:8px 12px; margin-bottom:12px;">{{ borrow_error }}</p>
+      {% endif %}
       <form method="post" action="{% url 'staff' %}">
         {% csrf_token %}
         <input type="hidden" name="borrow_product" value="1">
@@ -450,6 +453,17 @@ function closeModal() {
 document.getElementById('borrowModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
+
+{% if borrow_error and reopen_product %}
+document.addEventListener("DOMContentLoaded", function () {
+  openModal(
+    '{{ reopen_product.id }}',
+    '{{ reopen_product.image.url }}',
+    '{{ reopen_product.name|escapejs }}',
+    '{{ reopen_product.code|escapejs }}'
+  );
+});
+{% endif %}
 
 // -------- Staff Domain Pagination + Product Search --------
 document.addEventListener("DOMContentLoaded", function () {

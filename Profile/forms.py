@@ -55,8 +55,8 @@ class RegisterForm(forms.ModelForm):
 
         role = cleaned_data.get('role')
         branch = cleaned_data.get('branch')
-        if role == 'hr' and not branch:
-            self.add_error('branch', "Branch is required for the HR role.")
+        if role == 'staff' and not branch:
+            self.add_error('branch', "Branch is required for the Staff role.")
         return cleaned_data
 
     def save(self, commit=True):

@@ -62,43 +62,26 @@
 
             <div class="buttons">
 
-                {% if request.user.role == "HR" %}
+              <a href="{% url 'asset_edit' asset.id %}" class="edit">
+    <i class="fa-solid fa-pen"></i>
+    Edit
+</a>
+<a href="javascript:void(0);"
+     onclick="openDeleteModal()"
+     style="background:red;color:white;padding:10px 15px;border-radius:5px;text-decoration:none;">
+       <i class="fa-solid fa-trash"></i>
+       Delete
+</a>
 
-                <a href="{% url 'asset_edit' asset.id %}"
-                   class="edit">
-                    <i class="fa-solid fa-pen"></i>
-                    Edit
-                </a>
-                <a href="javascript:void(0);"
-                     onclick="openDeleteModal()"
-                     style="background:red;color:white;padding:10px 15px;border-radius:5px;text-decoration:none;">
-                       <i class="fa-solid fa-trash"></i>
-                       Delete
-                </a>
+<a href="{% url 'toggle_stock' asset.id %}" class="stock">
+    <i class="fa-solid fa-rotate"></i>
+    Toggle Stock
+</a>
 
-                <a href="{% url 'toggle_stock' asset.id %}"
-                   class="stock">
-                    <i class="fa-solid fa-rotate"></i>
-                    Toggle Stock
-                </a>
-
-                <a href="{% url 'hr_dashboard' %}?tab=assets"
-                   class="back">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    Back
-                </a>
-
-                {% else %}
-
-                <a href="{% url 'staff_dashboard' %}"
-                   class="back">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    Back
-                </a>
-
-                {% endif %}
-
-            </div>
+<a href="{% url 'hr_dashboard' %}?tab=assets" class="back">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</a>         </div>
 
         </div>
 

@@ -24,7 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('profile/', include('Profile.urls')),
     path('', lambda request: redirect('login')),
-    path('hr/', include('hr.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
   

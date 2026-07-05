@@ -1,5 +1,4 @@
 from django.db import models
-from hr.models import Product
 
 class Profile(models.Model):
     ROLE_CHOICES = [
@@ -19,14 +18,13 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.username} ({self.role})"
 
-
 class BorrowRequest(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
     ]
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='profile_borrow_requests')
+   
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     take_time = models.DateTimeField()

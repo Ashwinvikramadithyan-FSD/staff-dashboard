@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,700&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background-color: #050505; color: #fff; font-family: 'Playfair Display', serif; font-style: italic; margin: 0; padding: 20px; }
+   /* Registration Page Specifics - Unified */
+.registration-wrapper {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.cl { 
+    font-family: 'Playfair Display', serif; 
+    font-style: italic; 
+    text-align: center; 
+    color: #f5f0e8; 
+    margin-bottom: 30px; 
+}
+.form-container {
+    background: rgba(255, 252, 240, 0.92);
+    padding: 36px;
+    border-radius: 22px;
+    border: 1.5px solid rgba(200, 185, 145, 0.45);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    width: 100%;        /* was 2000px — bug fix */
+    max-width: 1000px;
+    margin: 0 auto;
+}
+/* ===== Form-as-table layout ===== */
+.form-container form {
+    display: table;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 14px;
+}
+
+.form-container form p {
+    display: table-row;
+}
+
+.form-container form p label {
+    display: table-cell;
+    width: 38%;
+    vertical-align: middle;
+    padding-right: 14px;
+    color: #3a2e1a;
+    font-weight: 700;
+}
+
+.form-container form p input,
+.form-container form p select {
+    display: table-cell;
+    width: 62%;
+}
+
+.form-container form input[type="submit"] {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* ===== Phone view: drop back to stacked label-over-input ===== */
+@media (max-width: 600px) {
+    .form-container { padding: 24px 18px; border-radius: 18px; }
+    .form-container form,
+    .form-container form p {
+        display: block;
+    }
+    .form-container form p label {
+        display: block;
+        width: 100%;
+        margin-bottom: 6px;
+    }
+    .form-container form p input,
+    .form-container form p select {
+        display: block;
+        width: 100%;
+    }
+    .form-container h1 { font-size: 1.25rem; }
+    .cl { font-size: 1.3rem; }
+}
+</style>
+<div class="form-container">
+    <h1>Register</h1>
+    <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+
+        <p>
+            <label for="id_username">User Name</label>
+            {{ form.username }}
+        </p>
+        {% if form.username.errors %}<p style="color:#8e3020;">{{ form.username.errors.0 }}</p>{% endif %}
+
+        <p>
+            <label for="id_first_name">First Name</label>
+            {{ form.first_name }}
+        </p>
+        {% if form.first_name.errors %}<p style="color:#8e3020;">{{ form.first_name.errors.0 }}</p>{% endif %}
+
+        <p>
+            <label for="id_last_name">Last Name</label>
+            {{ form.last_name }}
+        </p>
+        {% if form.last_name.errors %}<p style="color:#8e3020;">{{ form.last_name.errors.0 }}</p>{% endif %}
+
+        <p>
+            <label for="id_dob">Date of Birth</label>
+            {{ form.dob }}
+        </p>
+        {% if form.dob.errors %}<p style="color:#8e3020;">{{ form.dob.errors.0 }}</p>{% endif %}
+
+        <p>
+            <label for="id_phone_number">Phone Number</label>
+            {{ form.phone_number }}
+        </p>
+        {% if form.phone_number.errors %}<p style="color:#8e3020;">{{ form.phone_number.errors.0 }}</p>{% endif %}
+
+        <p>
+            <label for="id_email">Email</label>
+            {{ form.email }}
+        </p>
+        {% if form.email.errors %}<p style="color:#8e3020;">{{ form.email.errors.0 }}</p>{% endif %}
+
+        <p>
+            <label for="id_password">Password</label>
+            {{ form.password }}
+        </p>
+        {% if form.password.errors %}<p style="color:#8e3020;">{{ form.password.errors.0 }}</p>{% endif %}
+
+        <p>
+            <label for="id_confirm_password">Confirm Password</label>
+            {{ form.confirm_password }}
+        </p>
+        {% if form.confirm_password.errors %}<p style="color:#8e3020;">{{ form.confirm_password.errors.0 }}</p>{% endif %}
+
+        <p>
+            <label for="id_role">Role</label>
+            {{ form.role }}
+        </p>
+
+        <p id="branch-row">
+            <label for="id_branch">Branch</label>
+            {{ form.branch }}
+        </p>
+        {% if form.branch.errors %}<p style="color:#8e3020;">{{ form.branch.errors.0 }}</p>{% endif %}
+
+        <input type="submit" value="Register">
+    </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const roleField = document.getElementById("id_role");
+    const branchRow = document.getElementById("branch-row");
+    const branchField = document.getElementById("id_branch");
+
+    function toggleBranch() {
+        if (roleField.value === "staff") {
+            branchRow.style.display = "";
+            branchField.required = true;
+        } else {
+            branchRow.style.display = "none";
+            branchField.required = false;
+            branchField.value = "";
+        }
+    }
+
+    if (roleField) {
+        toggleBranch();
+        roleField.addEventListener("change", toggleBranch);
+    }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const dobField = document.getElementById("id_dob");
+    if (dobField) {
+        dobField.addEventListener("click", function () {
+            if (this.showPicker) this.showPicker();
+        });
+    }
+});
+</script>
+    
+    
+    {% endblock %}

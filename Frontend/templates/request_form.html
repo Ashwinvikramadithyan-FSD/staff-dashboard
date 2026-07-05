@@ -1,0 +1,54 @@
+
+<div class="modal-overlay" id="borrowModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+
+    <div class="modal-preview">
+      <img id="modal-img" src="" alt="">
+      <div>
+        <p class="prod-name" id="modal-prod-name"></p>
+        <p class="prod-code" id="modal-prod-code"></p>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-title">Borrow Request</p>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="borrow_product" value="1">
+        <input type="hidden" name="product_id" id="modal-product-id">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            {{ borrow_form.first_name }}
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            {{ borrow_form.last_name }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Product Name</label>
+          <input type="text" id="modal-product-name-display" readonly
+                 style="background:rgba(240,230,200,0.5); color:#5a4a30;">
+        </div>
+
+        <div class="form-group">
+          <label>Take Time</label>
+          {{ borrow_form.take_time }}
+        </div>
+
+        <div class="form-group" style="margin-bottom:22px;">
+          <label>Bring Time</label>
+          {{ borrow_form.bring_time }}
+        </div>
+
+        
+
+        <button type="submit" class="btn-submit">Submit Request</button>
+      </form>
+    </div>
+  </div>
+</div>

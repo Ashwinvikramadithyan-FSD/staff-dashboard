@@ -1,0 +1,306 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,700&display=swap');
+
+:root {
+    --glow-color: #ff00ff; /* Neon Pink/Purple Glow */
+    --bg-color: #050505;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: #fff;
+    font-family: 'Playfair Display', serif; /* Elegant Italic Style */
+    font-style: italic;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Navbar with Glassmorphism */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 20px 40px;
+    border-bottom: 2px solid var(--glow-color);
+    box-shadow: 0 0 20px var(--glow-color);
+    border-radius: 0 0 20px 20px;
+}
+
+/* Nav Buttons & Links */
+.tabs button, .nav-link {
+    background: transparent;
+    color: black;
+    border: 1px solid var(--glow-color);
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    transition: all 0.4s ease;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.tabs button:hover, .nav-link:hover {
+    background: var(--glow-color);
+    box-shadow: 0 0 15px var(--glow-color);
+    transform: scale(1.05);
+}
+
+/* Card Styling */
+.card {
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid #333;
+    padding: 30px;
+    margin: 20px 0;
+    border-radius: 15px;
+    transition: 0.5s;
+    border-left: 5px solid var(--glow-color);
+}
+
+.card:hover {
+    box-shadow: 0 0 25px rgba(255, 0, 255, 0.3);
+    transform: translateX(10px);
+}
+
+/* Typography Enhancements */
+h1 {
+    font-size: 3rem;
+    text-shadow: 0 0 10px var(--glow-color);
+    letter-spacing: 2px;
+}
+
+h3 {
+    color: #aaa;
+    font-weight: 400;
+}
+
+h3 span {
+    color: #fff;
+    font-weight: 700;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,700&display=swap');
+
+:root {
+    --primary: #00f2ff; /* Electric Cyan */
+    --secondary: #0055ff; /* Deep Blue Glow */
+    --bg: #05080f;
+    --card-bg: rgba(10, 15, 25, 0.8);
+}
+
+body {
+    background-color: var(--bg);
+    color: #e0e0e0;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    margin: 0;
+}
+
+/* --- Form & Login Styling --- */
+.login-container, .form-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 40px;
+    background: var(--card-bg);
+    border: 1px solid var(--primary);
+    border-radius: 15px;
+    box-shadow: 0 0 20px var(--secondary);
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background: #111;
+    border: 1px solid #333;
+    color: white;
+    font-family: inherit;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+/* --- Buttons --- */
+.btn-submit {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 10px 30px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.btn-submit:hover {
+    background: var(--primary);
+    color: black;
+    box-shadow: 0 0 20px var(--primary);
+}
+
+/* Grid Layout for Boxes */
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Individual Boxed Card */
+.card {
+    background: rgba(10, 15, 25, 0.9);
+    border: 1px solid var(--primary);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+    transition: 0.3s;
+    text-align: center;
+}
+
+.card:hover {
+    box-shadow: 0 0 25px var(--primary);
+    transform: translateY(-5px);
+}
+
+/* Internal Text Formatting inside boxes */
+.card h3 {
+    margin: 10px 0;
+    color: var(--primary);
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+}
+
+.card h4 {
+    margin: 0;
+    font-weight: normal;
+    color: #ffffff;
+}
+
+/* Button grouping inside the card */
+.card-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+:root {
+    --bg-light: #f4f7f6; /* Soft off-white */
+    --card-bg: rgba(255, 255, 255, 0.9); /* Translucent White */
+    --glow-primary: #00d4ff; /* Bright Cyan Glow */
+    --text-dark: #2d3436;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Light-themed Cards */
+.card {
+    background: var(--card-bg);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 20px;
+    /* Soft glowing shadow that stands out on white */
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2); 
+    transition: 0.4s;
+}
+
+.card:hover {
+    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.4);
+    transform: translateY(-10px);
+}
+
+/* Headings in Light Mode */
+h1, h2 {
+    color: #1a1a1a;
+    text-shadow: 0 0 5px rgba(0, 212, 255, 0.3);
+}
+
+/* Navbar in Light Mode */
+.navbar {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--glow-primary);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Buttons in Light Mode */
+.btn-submit {
+    background: white;
+    border: 2px solid var(--glow-primary);
+    color: var(--text-dark);
+}
+
+.btn-submit:hover {
+    background: var(--glow-primary);
+    color: white;
+    box-shadow: 0 0 20px var(--glow-primary);
+}
+/* Layout for the boxes */
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+/* The individual boxed style */
+.card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); /* Soft depth */
+    transition: 0.3s ease;
+    border-bottom: 5px solid var(--glow-primary); /* Glowing accent line */
+}
+
+.card:hover {
+    box-shadow: 0 15px 30px rgba(0, 212, 255, 0.3); /* The "Glowing" effect */
+    transform: translateY(-5px);
+}
+
+.card h3 {
+    font-size: 1.4rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.card span {
+    color: var(--glow-primary); /* Uses your primary glow color */
+}
+
+.card p {
+    margin: 8px 0;
+    font-style: normal;
+}
+
+.card-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.delete {
+    border-color: #ff4d4d !important;
+    color: #ff4d4d !important;
+}
+
+.delete:hover {
+    background: #ff4d4d !important;
+    color: white !important;
+}
+

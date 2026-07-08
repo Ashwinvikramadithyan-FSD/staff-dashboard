@@ -1,9 +1,7 @@
 from datetime import date
 from django import forms
 from django.contrib.auth.hashers import make_password
-from .models import Profile
-from hr.models import BorrowRequest
-
+from .models import Profile, BorrowRequest
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())

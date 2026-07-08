@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Asset Request History</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+        background: #f1f4f9;
+        min-height: 100vh;
+        padding: 40px 24px;
+    }
+
+    .wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 22px;
+    }
+
+    .page-header h1 {
+        font-size: 22px;
+        color: #111827;
+    }
+
+    .page-header a {
+        text-decoration: none;
+        color: #374151;
+        background: #fff;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 2px 16px rgba(15,23,42,.08);
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 900px;
+    }
+
+    th {
+        text-align: left;
+        padding: 14px 16px;
+        background: #f9fafb;
+        color: #374151;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    td {
+        padding: 14px 16px;
+        border-bottom: 1px solid #f0f2f5;
+        color: #1f2937;
+        font-size: 14px;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .status.pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status.approved {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status.rejected {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .request-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .approve-btn,
+    .reject-btn,
+    .delete-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        border: none;
+        border-radius: 8px;
+        padding: 7px 12px;
+        font-size: 12.5px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .approve-btn {
+        background: #16a34a;
+        color: #fff;
+    }
+
+    .reject-btn {
+        background: #ef4444;
+        color: #fff;
+    }
+
+    .delete-btn {
+        background: #f3f4f6;
+        color: #374151;
+        border: 1px solid #d1d5db;
+    }
+
+    .reason-cell {
+        text-align: right;
+        color: #991b1b;
+        max-width: 220px;
+    }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <div class="page-header">
+        <h1>Asset Request History</h1>
+        <a href="{% url 'hr_dashboard' %}">Back to Dashboard</a>
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Product</th>
+                    <th>Take Time</th>
+                    <th>Return Time</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                    <th>Delete</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for req in asset_requests %}
+                <tr>
+                    <td>{{ req.employee_name }}</td>
+                    <td>{{ req.product.name }}</td>
+                    <td>{{ req.take_time|date:"d M Y H:i" }}</td>
+                    <td>{{ req.return_time|date:"d M Y H:i" }}</td>
+                    <td>{{ req.submitted_at|date:"d M Y H:i" }}</td>
+                    <td>
+                        {% if req.status == "PENDING" %}
+                            <div class="request-buttons">
+                                <a href="{% url 'approve_asset_request' req.id %}" class="approve-btn">
+                                    <i class="fa-solid fa-check"></i> Approve
+                                </a>
+                                <a href="{% url 'reject_asset_request' req.id %}" class="reject-btn">
+                                    <i class="fa-solid fa-xmark"></i> Reject
+                                </a>
+                            </div>
+                        {% elif req.status == "APPROVED" %}
+                            <span class="status approved">Approved</span>
+                        {% else %}
+                            <span class="status rejected">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'delete_asset_request' req.id %}" onsubmit="return confirm('Delete this request?');">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </td>
+                    <td class="reason-cell">
+                        {% if req.status == "REJECTED" and req.rejection_reason %}
+                            {{ req.rejection_reason }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align:center;padding:30px;color:#6b7280;">
+                        No asset requests yet.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

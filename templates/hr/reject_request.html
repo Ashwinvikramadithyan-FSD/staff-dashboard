@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reject Asset Request</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+        background: #f1f4f9;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .card {
+        background: #fff;
+        width: 100%;
+        max-width: 480px;
+        border-radius: 16px;
+        padding: 35px;
+        box-shadow: 0 2px 16px rgba(15,23,42,.1);
+    }
+
+    .card h2 {
+        font-size: 22px;
+        color: #111827;
+        margin-bottom: 6px;
+    }
+
+    .card p.subtitle {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+
+    .request-summary {
+        background: #f9fafb;
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 22px;
+        font-size: 14px;
+        color: #374151;
+    }
+
+    .request-summary strong {
+        color: #111827;
+    }
+
+    label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+
+    textarea {
+        width: 100%;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 14px;
+        font-family: inherit;
+        resize: vertical;
+        outline: none;
+    }
+
+    textarea:focus {
+        border-color: #ef4444;
+    }
+
+    .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 22px;
+    }
+
+    button,
+    .cancel-link {
+        flex: 1;
+        text-align: center;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+    }
+
+    button {
+        background: #ef4444;
+        color: #fff;
+    }
+
+    button:hover {
+        background: #dc2626;
+    }
+
+    .cancel-link {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .cancel-link:hover {
+        background: #e5e7eb;
+    }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+    <h2>
+        <i class="fa-solid fa-circle-xmark" style="color:#ef4444;"></i>
+        Reject Asset Request
+    </h2>
+
+    <p class="subtitle">
+        Please provide a reason for rejecting this request.
+    </p>
+
+    <div class="request-summary">
+        <strong>Employee:</strong>
+        {{ req.employee_name }}
+        <br>
+        <strong>Asset:</strong>
+        {{ req.product.name }}
+    </div>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label for="rejection_reason">Reason for Rejection</label>
+
+        <textarea
+            id="rejection_reason"
+            name="rejection_reason"
+            rows="5"
+            required
+            placeholder="Enter reason..."></textarea>
+
+        <div class="actions">
+
+            <a href="{% url 'asset_request_history' %}" class="cancel-link">
+                Cancel
+            </a>
+
+            <button type="submit">
+                <i class="fa-solid fa-xmark"></i>
+                Reject Request
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -13,15 +13,25 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
 .nav-tab { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:600; font-style:italic; color:#2c2416; background:transparent; border:1.5px solid transparent; border-radius:50px; padding:7px 24px; cursor:pointer; transition:all 0.2s; }
 .nav-tab:hover, .nav-tab.active { background:rgba(255,255,255,0.75); border-color:rgba(180,160,100,0.4); box-shadow:0 2px 10px rgba(180,160,100,0.2); }
 
-.main-content { position:relative; z-index:1; max-width:1150px; margin:0 auto; padding:44px 24px 70px; }
-.section { display:none; }
+.company-logo { height:150px; width:150px; object-fit:contain; padding:8px; border-radius:16px; border:1.5px solid rgba(180,160,100,0.45); background:rgba(255,255,255,0.7); flex-shrink:0; }
+
+.profile-card{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.profile-info{ flex:1; }
+
+@media(max-width:768px){
+  .profile-card{ flex-direction:column; text-align:center; }
+  .company-logo{ height:110px; width:110px; }
+}
+
+.main-content { width:100%; margin:0 auto; padding:44px 40px 70px; }
+.section { display:none;}
 .section.active { display:block; }
 .section-title { font-family:'Playfair Display',serif; font-size:1.8rem; font-style:italic; font-weight:600; color:#f5f0e8; text-align:center; margin-bottom:6px; }
 .section-sub { font-family:'Playfair Display',serif; font-style:italic; color:#b0a080; text-align:center; font-size:0.95rem; margin-bottom:36px; }
 
-.product-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(255px,1fr)); gap:22px; }
+.product-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:22px; }
 .product-card { background:rgba(255,252,240,0.82); border:1.5px solid rgba(200,185,145,0.45); border-radius:18px; overflow:hidden; box-shadow:0 2px 16px rgba(180,160,100,0.12); display:flex; flex-direction:column; }
-.product-card img { width:100%; height:180px; object-fit:cover; display:block; border-bottom:1px solid rgba(200,185,145,0.3); }
+.product-card img { width:100%; height:180px; object-fit:contain; background:#ffffff; display:block; border-bottom:1px solid rgba(200,185,145,0.3); }
 .card-body { padding:16px 18px 14px; flex:1; display:flex; flex-direction:column; }
 .card-name { font-family:'Playfair Display',serif; font-size:1rem; font-weight:600; font-style:italic; color:#1e1810; margin-bottom:10px; }
 .card-detail { font-size:0.8rem; font-style:italic; color:#3a2e1a; margin-bottom:4px; }
@@ -68,7 +78,7 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
   display: none;               /* Chrome, Safari, new Edge */
 }
 .modal-preview { display:flex; align-items:center; gap:16px; padding:22px 26px 18px; border-bottom:1px solid rgba(200,185,145,0.35); background:rgba(245,235,210,0.45); border-radius:22px 22px 0 0; }
-.modal-preview img { width:68px; height:68px; object-fit:cover; border-radius:12px; }
+.modal-preview img { width:68px; height:68px; object-fit:contain; background:#ffffff; border-radius:12px; }
 .prod-name { font-family:'Playfair Display',serif; font-size:0.97rem; font-weight:600; font-style:italic; color:#1e1810; }
 .prod-code { font-size:0.76rem; color:#7a6a50; }
 .modal-close { position:absolute; top:13px; right:17px; font-size:1.2rem; background:none; border:none; cursor:pointer; color:#7a6a50; }
@@ -80,12 +90,42 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
 
 /* Table */
 .req-table { width:100%; border-collapse:collapse; margin-top:20px; background:rgba(255,252,240,0.85); border-radius:16px; overflow:hidden; }
-.req-table th { padding:12px 16px; text-align:left; background:rgba(168,216,232,0.5); font-family:'Playfair Display',serif; font-style:italic; color:#1e1810; }
-.req-table td { padding:12px 16px; border-bottom:1px solid rgba(200,185,145,0.3); color:#2c2416; font-size:0.88rem; }
-.badge { padding:3px 14px; border-radius:50px; font-size:0.8rem; font-weight:600; }
+.req-table th { padding:12px 16px; text-align:center; vertical-align:middle; background:rgba(168,216,232,0.5); font-family:'Playfair Display',serif; font-style:italic; color:#1e1810; }
+.req-table td { padding:12px 16px; text-align:center; vertical-align:middle; border-bottom:1px solid rgba(200,185,145,0.3); color:#2c2416; font-size:0.88rem; white-space:nowrap; }
+.table-scroll {
+  overflow-x:auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.table-scroll::-webkit-scrollbar {
+  display: none;
+}
+.badge { padding:3px 14px; border-radius:50px; font-size:0.8rem; font-weight:600; display:inline-flex; align-items:center; justify-content:center; white-space:nowrap; }
 .badge.approved { background:rgba(130,210,160,0.3); color:#1a6e3a; border:1px solid rgba(100,190,130,0.4); }
 .badge.rejected { background:rgba(240,150,120,0.25); color:#8e3020; border:1px solid rgba(220,120,100,0.35); }
 .badge.pending { background:rgba(255,210,100,0.3); color:#7a5a00; border:1px solid rgba(200,170,50,0.4); }
+
+.req-table .delete-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+  background: rgba(150,150,150,0.25);
+  color: #5a4a30;
+  border: 1px solid rgba(150,150,150,0.4);
+  border-radius: 50px;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+}
+
+.req-table td[data-label="Status"],
+.req-table td[data-label="Delete"] {
+  white-space: nowrap;
+}
 
 /* ===== Pagination ===== */
 .pagination {
@@ -110,6 +150,9 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
   cursor: pointer;
   transition: all 0.2s;
 }
+
+.logout-btn { background:rgba(240,150,120,0.3); color:#8e3020; border:1px solid rgba(220,120,100,0.35); text-decoration:none; padding:8px 20px; border-radius:50px; font-weight:600; font-style:italic; font-size:0.88rem; transition:.2s; }
+.logout-btn:hover { background:rgba(240,150,120,0.5); }
 
 .pagination button:hover:not(:disabled) {
   background: linear-gradient(135deg,#a8d8e8,#7ec8e3);
@@ -206,10 +249,13 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
   .btn-borrow { font-size: 0.72rem; padding: 7px; }
 
   .profile-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 12px;
   }
-  .profile-card { padding: 12px; }
+  .profile-card {
+    padding: 12px;
+    width: 100%;
+  }
   .profile-card h3 { font-size: 0.85rem; margin-bottom: 6px; }
   .profile-card p { font-size: 0.72rem; margin-bottom: 3px; }
   .card-actions a { padding: 6px; font-size: 0.7rem; }
@@ -253,6 +299,70 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
   .pagination button { font-size: 0.72rem; padding: 6px 9px; }
   #pageNumbers button, #profilePageNumbers button { min-width: 26px; padding: 5px 8px; }
 }
+
+
+/* ===== Sliding scroll-arrow indicators for tables (phone view) ===== */
+.ts-outer-wrap {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+}
+
+.ts-arrow-btn {
+  display: none;
+  position: absolute;
+  top: 50%;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  border-radius: 50%;
+  background: rgba(20, 20, 20, 0.62);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 20;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: opacity 0.15s ease;
+}
+
+.ts-arrow-btn:focus {
+  outline: none;
+}
+
+.ts-arrow-btn.ts-left {
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ts-arrow-btn.ts-right {
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 768px) {
+  .ts-arrow-btn.ts-show {
+    display: flex;
+    animation: ts-pulse 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes ts-pulse {
+  0%, 100% { opacity: 0.75; transform: translateY(-50%) scale(1); }
+  50%      { opacity: 1;    transform: translateY(-50%) scale(1.12); }
+}
 </style>
 
 <!-- Borrow Modal -->
@@ -263,30 +373,25 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
       <img id="modal-img" src="" alt="">
       <div>
         <p class="prod-name" id="modal-prod-name"></p>
-        <p class="prod-code" id="modal-prod-code"></p>
       </div>
     </div>
     <div class="modal-body">
       <p class="modal-title">Borrow Request</p>
-      <form method="post" action="{% url 'staff' %}">
+      <form method="post" action="{% url 'staff' %}" onsubmit="return validateBorrowTimes()">
         {% csrf_token %}
         <input type="hidden" name="borrow_product" value="1">
         <input type="hidden" name="product_id" id="modal-product-id">
         <div class="form-group">
-          <label>First Name</label>
+          <label>employee Name</label>
           <input type="text" name="first_name" required>
         </div>
         
         <div class="form-group">
-          <label>Last Name</label>
+          <label>product</label>
           <input type="text" name="last_name" required>
         </div>
         
-        <div class="form-group">
-          <label>Product Name</label>
-          <input type="text" name="product" required>
-         
-        </div>
+        
         <div class="form-group">
           <label >Take Time</label>
           <input type="datetime-local" name="take_time" required>
@@ -309,7 +414,7 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     <button class="nav-tab" id="tab-request" onclick="switchTab('request')">Request</button>
     <button class="nav-tab" id="tab-history" onclick="switchTab('history')">History</button>
 
-    <a class="nav-tab" href="{% url 'logout' %}">Logout</a>
+    <a class="logout-btn" href="{% url 'logout' %}">📂Logout </a>
   </div>
 </nav>
 
@@ -322,12 +427,18 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     <div class="profile-grid">
       {% for profile in profiles %}
       <div class="profile-card">
-        <h3>{{ profile.first_name }} {{ profile.last_name }}</h3>
-        <p><strong>ID:</strong> {{ profile.id }}</p>
-        <p><strong>Email:</strong> {{ profile.email }}</p>
-        <p><strong>Role:</strong> {{ profile.role }}</p>
-        <p><strong>Phone:</strong> {{ profile.phone_number }}</p>
-        <p><strong>Date of Birth:</strong> {{ profile.dob }}</p>
+        <div class="profile-info">
+          <h3>{{ profile.first_name }} {{ profile.last_name }}</h3>
+          <p><strong>ID:</strong> {{ profile.id }}</p>
+          <p><strong>Email:</strong> {{ profile.email }}</p>
+          <p><strong>Role:</strong> {{ profile.role }}</p>
+          <p><strong>Phone:</strong> {{ profile.phone_number }}</p>
+          <p><strong>Date of Birth:</strong> {{ profile.dob }}</p>
+        </div>
+
+        <img class="company-logo"
+             src="data:image/jpeg;base64,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"
+             alt="Company Logo">
       </div>
       {% empty %}
       <p style="color:#b0a080;">No profiles yet.</p>
@@ -339,6 +450,9 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
   <div class="section" id="section-request">
     <h1 class="section-title">Available Products</h1>
     <p class="section-sub">Click Request to borrow an item</p>
+{% if borrow_error %}
+<p style="text-align:center;color:#c0392b;font-weight:600;margin-bottom:16px;">{{ borrow_error }}</p>
+{% endif %}
     <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;color:black;">
       <input type="text" id="productSearchInput" placeholder="Search product by name..."
              style="flex:1; min-width:200px; color:black;padding:10px 16px; border-radius:50px; border:1.5px solid rgba(180,160,100,0.4); font-family:'Playfair Display',serif; font-style:italic; background:rgba(255,252,240,0.9);">
@@ -349,16 +463,18 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     <div class="product-grid" id="profileGrid">
       {% for product in products %}
       <div class="product-card">
+        {% if product.image %}
         <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+        <img src="{% static 'images/no-image.png' %}" alt="No Image">
+        {% endif %}
         <div class="card-body">
           <p class="card-name">{{ product.name }}</p>
-          <p class="card-detail">Code: {{ product.code }}</p>
-          <p class="card-detail">Made In: {{ product.made_in }}</p>
-          <p class="card-detail">Material: {{ product.material }}</p>
+          <p class="card-detail">{{ product.description }}</p>
           <div class="card-footer">
-            {% if product.available %}
+            {% if product.is_in_stock %}
             <button class="btn-borrow"
-              onclick="openModal('{{ product.id }}','{{ product.image.url }}','{{ product.name }}','{{ product.code }}')">
+              onclick="openModal('{{ product.id }}','{{ product.image.url }}','{{ product.name }}')">
               Request
             </button>
             {% else %}
@@ -382,39 +498,53 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
   <div class="section" id="section-history">
     <h1 class="section-title">My Request History</h1>
     <p class="section-sub">Status of all your submitted borrow requests</p>
+    <div class="table-scroll">
     <table class="req-table">
       <thead>
         <tr>
-          <th>Name</th>
+          <th>Employee Name</th>
+          
           <th>Product</th>
           <th>Take Time</th>
           <th>Return Time</th>
           <th>Submitted</th>
           <th>Status</th>
-          <th>Actions</th>
+          <th>Delete</th>
+          <th>Reason</th>
         </tr>
       </thead>
       <tbody>
         {% for req in borrow_requests %}
         <tr>
-          <td data-label="Name">{{ req.first_name }} {{ req.last_name }}</td>
+          <td data-label="Employee Name">{{ req.first_name }} {{ req.last_name }}</td>
+        
           <td data-label="Product">{{ req.product.name }}</td>
           <td data-label="Take Time">{{ req.take_time|date:"d M Y H:i" }}</td>
           <td data-label="Return Time">{{ req.bring_time|date:"d M Y H:i" }}</td>
           <td data-label="Submitted">{{ req.submitted_at|date:"d M Y H:i" }}</td>
-          <td data-label="Status"><span class="badge {{ req.status }}">{{ req.get_status_display }}</span></td>
-          <td data-label="Actions">
+          <td data-label="Status">
+            <span class="badge {{ req.status }}">{{ req.get_status_display }}</span>
+          </td>
+          <td data-label="Delete">
             <form method="post" action="{% url 'delete_history_request' req.id %}" onsubmit="return confirm('Delete this request?');">
               {% csrf_token %}
-              <button type="submit" style="background:rgba(150,150,150,0.25);color:#5a4a30;border:1px solid rgba(150,150,150,0.4);border-radius:50px;padding:6px 16px;cursor:pointer;font-size:0.8rem;">🗑 Delete</button>
+              <button type="submit" class="delete-btn">🗑 Delete</button>
             </form>
+          </td>
+          <td data-label="Reason">
+            {% if req.status == "rejected" and req.rejection_reason %}
+              <small style="color:#8e3020;">{{ req.rejection_reason }}</small>
+            {% else %}
+              -
+            {% endif %}
           </td>
         </tr>
         {% empty %}
-        <tr><td colspan="7" style="text-align:center;padding:30px;color:#7a6a50;">No requests yet.</td></tr>
+        <tr><td colspan="9" style="text-align:center;padding:30px;color:#7a6a50;">No requests yet.</td></tr>
         {% endfor %}
       </tbody>
     </table>
+    </div>
   </div>
 
 </div>
@@ -433,11 +563,10 @@ window.addEventListener('DOMContentLoaded', function() {
   switchTab('domain');
 });
 
-function openModal(id, imgSrc, name, code) {
+function openModal(id, imgSrc, name) {
   document.getElementById('modal-product-id').value = id;
   document.getElementById('modal-img').src = imgSrc;
   document.getElementById('modal-prod-name').textContent = name;
-  document.getElementById('modal-prod-code').textContent = 'Code: ' + code;
   document.getElementById('borrowModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -533,6 +662,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+function validateBorrowTimes() {
+  var takeTime = document.querySelector('input[name="take_time"]').value;
+  var bringTime = document.querySelector('input[name="bring_time"]').value;
+  if (!takeTime || !bringTime) return true;
+  var take = new Date(takeTime);
+  var bring = new Date(bringTime);
+  if (take > bring) {
+    alert("Take Time cannot be later than Return Time.");
+    return false;
+  }
+  return true;
+}
 </script>
 
 {% endblock %}

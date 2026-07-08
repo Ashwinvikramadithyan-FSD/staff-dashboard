@@ -1,5 +1,6 @@
 from django.db import models
-from hr.models import Product
+from assettracker.models import Asset
+
 
 class Profile(models.Model):
     ROLE_CHOICES = [
@@ -26,13 +27,16 @@ class BorrowRequest(models.Model):
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
     ]
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='profile_borrow_requests')
+
+    product = models.ForeignKey(Asset, on_delete=models.CASCADE, related_name='borrow_requests')
+    requested_by = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     take_time = models.DateTimeField()
     bring_time = models.DateTimeField()
     submitted_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    rejection_reason = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name} - {self.product.name}"

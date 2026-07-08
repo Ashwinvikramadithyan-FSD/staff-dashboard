@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import check_password
-from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from .models import Profile
+from .models import Profile, BorrowRequest
 from .forms import RegisterForm
-from hr.models import Product, BorrowRequest as HRBorrowRequest
+from assettracker.models import Asset
 
 
 def register(request):
@@ -47,76 +46,52 @@ def staff(request):
     profile_id = request.session.get('profile_id')
     current_profile = Profile.objects.filter(id=profile_id).first() if profile_id else None
     borrow_error = None
-    reopen_product = None
 
     if request.method == 'POST' and 'borrow_product' in request.POST:
-        if not current_profile:
-            return redirect('login')
         product_id = request.POST.get('product_id')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        take_time = request.POST.get('take_time')
-        bring_time = request.POST.get('bring_time')
+        product = get_object_or_404(Asset, id=product_id)
 
-        if product_id and first_name and take_time and bring_time:
-            parsed_take = parse_datetime(take_time)
-            parsed_bring = parse_datetime(bring_time)
-
-            if parsed_take is None or parsed_bring is None:
-                borrow_error = "Please enter valid take and return times."
-            elif timezone.is_naive(parsed_take):
-                current_tz = timezone.get_current_timezone()
-                parsed_take = timezone.make_aware(parsed_take, current_tz)
-                parsed_bring = timezone.make_aware(parsed_bring, current_tz)
-
-            if borrow_error is None:
-                if parsed_take < timezone.now():
-                    borrow_error = "Take time cannot be in the past."
-                elif parsed_take > parsed_bring:
-                    borrow_error = "Take time must be less than or equal to the return time."
-
-            if borrow_error is None:
-                HRBorrowRequest.objects.create(
-                    product_id=product_id,
-                    requested_by=current_profile,
-                    first_name=first_name,
-                    last_name=last_name,
-                    take_time=take_time,
-                    bring_time=bring_time,
-                )
-                return redirect('staff')
-            else:
-                reopen_product = Product.objects.filter(id=product_id).first()
+        if not product.is_in_stock:
+            borrow_error = "This asset is not available."
         else:
-            borrow_error = "Please fill in all required fields."
-            reopen_product = Product.objects.filter(id=product_id).first() if product_id else None
+            BorrowRequest.objects.create(
+                product=product,
+                requested_by=current_profile,
+                first_name=request.POST.get('first_name'),
+                last_name=request.POST.get('last_name'),
+                take_time=parse_datetime(request.POST.get('take_time')),
+                bring_time=parse_datetime(request.POST.get('bring_time')),
+            )
+            product.is_in_stock = False
+            product.save()
+            return redirect('staff')
 
     if current_profile:
         profiles = Profile.objects.filter(id=current_profile.id)
-        borrow_requests = HRBorrowRequest.objects.filter(
-            requested_by=current_profile
-        ).select_related('product').order_by('-submitted_at')
+        borrow_requests = BorrowRequest.objects.filter(requested_by=current_profile).order_by('-submitted_at')
     else:
         profiles = Profile.objects.none()
-        borrow_requests = HRBorrowRequest.objects.none()
+        borrow_requests = BorrowRequest.objects.none()
 
-    products = Product.objects.all()
+    products = Asset.objects.all()
+
     return render(request, 'staff.html', {
-        'profiles': profiles, 'products': products, 'borrow_requests': borrow_requests,
-        'borrow_error': borrow_error, 'reopen_product': reopen_product,
+        'profiles': profiles,
+        'products': products,
+        'borrow_requests': borrow_requests,
+        'borrow_error': borrow_error,
     })
 
 
 def delete_history_request(request, id):
-    profile_id = request.session.get('profile_id')
-    req = get_object_or_404(HRBorrowRequest, id=id, requested_by_id=profile_id)
+    req = get_object_or_404(BorrowRequest, id=id, requested_by_id=request.session.get('profile_id'))
     if request.method == "POST":
         req.delete()
     return redirect('staff')
 
 
 def delete_request_product(request, id):
-    product = get_object_or_404(Product, id=id)
+    product = get_object_or_404(Asset, id=id)
     if request.method == "POST":
         product.delete()
     return redirect('staff')

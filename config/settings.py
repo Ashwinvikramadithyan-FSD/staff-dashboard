@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-%p6vr8j#wo5g$*voucdc(c^!n1xqj5&n(8p2iah+#1$u^l2(h#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['hariharan.pythonanywhere.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['vikramadithyan.pythonanywhere.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -128,4 +128,4 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 AUTH_USER_MODEL = 'assettracker.User'
-STATIC_ROOT = '/home/hariharan/HR-DASHBOARD/static_files/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'

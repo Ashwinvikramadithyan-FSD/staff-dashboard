@@ -6,13 +6,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,700&display=swap');
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background-color: #050505; color: #fff; font-family: 'Playfair Display', serif; font-style: italic; margin: 0; padding: 20px; }
-   /* Registration Page Specifics - Unified */
 .registration-wrapper {
     max-width: 500px;
     margin: 40px auto;
     padding: 0 20px;
 }
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { color-scheme: light; }
 .cl { 
     font-family: 'Playfair Display', serif; 
     font-style: italic; 
@@ -26,11 +26,10 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     border-radius: 22px;
     border: 1.5px solid rgba(200, 185, 145, 0.45);
     box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    width: 100%;        /* was 2000px — bug fix */
+    width: 100%;
     max-width: 1000px;
     margin: 0 auto;
 }
-/* ===== Form-as-table layout ===== */
 .form-container form {
     display: table;
     width: 100%;
@@ -55,6 +54,11 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
 .form-container form p select {
     display: table-cell;
     width: 62%;
+    background-color: #ffffff;
+    color: #2c2416;
+    border: 1px solid rgba(180,160,100,0.4);
+    border-radius: 8px;
+    padding: 8px 10px;
 }
 
 .form-container form input[type="submit"] {
@@ -63,7 +67,6 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     margin-top: 10px;
 }
 
-/* ===== Phone view: drop back to stacked label-over-input ===== */
 @media (max-width: 600px) {
     .form-container { padding: 24px 18px; border-radius: 18px; }
     .form-container form,
@@ -83,6 +86,47 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
     .form-container h1 { font-size: 1.25rem; }
     .cl { font-size: 1.3rem; }
 }
+.password-wrapper {
+    position: relative;
+    display: table-cell;
+    width: 62%;
+}
+.password-wrapper input {
+    width: 100%;
+    padding-right: 38px;
+    box-sizing: border-box;
+}
+.password-wrapper .icon-eye {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    stroke: #ffffff;
+    opacity: 0.85;
+}
+.password-wrapper .icon-eye:hover {
+    opacity: 1;
+}
+
+@media (max-width: 600px) {
+    .password-wrapper { display: block; width: 100%; }
+}
+@media (max-width: 600px) {
+    .icon-eye {
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 18px;
+    }
+}
+
+
+.icon-eye{margin-right:110px;
+         color:black;}
 </style>
 <div class="form-container">
     <h1>Register</h1>
@@ -127,13 +171,25 @@ body { background-color: #050505; color: #fff; font-family: 'Playfair Display', 
 
         <p>
             <label for="id_password">Password</label>
-            {{ form.password }}
+            <span class="password-wrapper">
+                {{ form.password }}
+                <svg class="icon-eye" data-target="id_password" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.6 21.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+                    <path d="M1 1l22 22"/>
+                </svg>
+            </span>
         </p>
         {% if form.password.errors %}<p style="color:#8e3020;">{{ form.password.errors.0 }}</p>{% endif %}
 
         <p>
             <label for="id_confirm_password">Confirm Password</label>
-            {{ form.confirm_password }}
+            <span class="password-wrapper">
+                {{ form.confirm_password }}
+                <svg class="icon-eye" data-target="id_confirm_password" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.6 21.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+                    <path d="M1 1l22 22"/>
+                </svg>
+            </span>
         </p>
         {% if form.confirm_password.errors %}<p style="color:#8e3020;">{{ form.confirm_password.errors.0 }}</p>{% endif %}
 
@@ -186,6 +242,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
-    
-    
-    {% endblock %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".icon-eye").forEach(function (icon) {
+        icon.addEventListener("click", function () {
+            const input = document.getElementById(this.dataset.target);
+            if (!input) return;
+            input.type = input.type === "password" ? "text" : "password";
+        });
+    });
+});
+</script>
+
+{% endblock %}

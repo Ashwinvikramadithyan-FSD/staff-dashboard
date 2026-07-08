@@ -1,12 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import check_password
-from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from .models import Profile
+from .models import Profile, BorrowRequest
 from .forms import RegisterForm
+from assettracker.models import Asset
 
-# NOTE: If you moved your models, update the line below:
-# from .models import Profile, Product, HRBorrowRequest
 
 def register(request):
     if request.method == 'POST':
@@ -32,7 +30,8 @@ def login(request):
         else:
             request.session.flush()
             request.session['profile_id'] = profile.id
-            # Redirecting all users to staff since 'hr_dashboard' was removed
+            if profile.role == 'hr':
+                return redirect('hr_dashboard')
             return redirect('staff')
 
     return render(request, 'login.html', {'error': error, 'username': submitted_username})
@@ -46,42 +45,53 @@ def logout(request):
 def staff(request):
     profile_id = request.session.get('profile_id')
     current_profile = Profile.objects.filter(id=profile_id).first() if profile_id else None
-    
-    # NOTE: Functionality below is commented out because it depends on 
-    # models from the 'hr' app which you are deleting.
     borrow_error = None
-    reopen_product = None
-    borrow_requests = None
-    products = None
 
     if request.method == 'POST' and 'borrow_product' in request.POST:
-        borrow_error = "Borrowing functionality is currently disabled."
+        product_id = request.POST.get('product_id')
+        product = get_object_or_404(Asset, id=product_id)
+
+        if not product.is_in_stock:
+            borrow_error = "This asset is not available."
+        else:
+            BorrowRequest.objects.create(
+                product=product,
+                requested_by=current_profile,
+                first_name=request.POST.get('first_name'),
+                last_name=request.POST.get('last_name'),
+                take_time=parse_datetime(request.POST.get('take_time')),
+                bring_time=parse_datetime(request.POST.get('bring_time')),
+            )
+            product.is_in_stock = False
+            product.save()
+            return redirect('staff')
 
     if current_profile:
         profiles = Profile.objects.filter(id=current_profile.id)
+        borrow_requests = BorrowRequest.objects.filter(requested_by=current_profile).order_by('-submitted_at')
     else:
         profiles = Profile.objects.none()
+        borrow_requests = BorrowRequest.objects.none()
+
+    products = Asset.objects.all()
 
     return render(request, 'staff.html', {
-        'profiles': profiles, 
-        'products': products, 
+        'profiles': profiles,
+        'products': products,
         'borrow_requests': borrow_requests,
-        'borrow_error': borrow_error, 
-        'reopen_product': reopen_product,
+        'borrow_error': borrow_error,
     })
 
 
 def delete_history_request(request, id):
-    # This will fail unless HRBorrowRequest is moved to Profile/models.py
-    # req = get_object_or_404(HRBorrowRequest, id=id, requested_by_id=request.session.get('profile_id'))
-    # if request.method == "POST":
-    #     req.delete()
+    req = get_object_or_404(BorrowRequest, id=id, requested_by_id=request.session.get('profile_id'))
+    if request.method == "POST":
+        req.delete()
     return redirect('staff')
 
 
 def delete_request_product(request, id):
-    # This will fail unless Product is moved to Profile/models.py
-    # product = get_object_or_404(Product, id=id)
-    # if request.method == "POST":
-    #     product.delete()
+    product = get_object_or_404(Asset, id=id)
+    if request.method == "POST":
+        product.delete()
     return redirect('staff')

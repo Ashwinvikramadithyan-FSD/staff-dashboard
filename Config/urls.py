@@ -23,6 +23,7 @@ from django.shortcuts import redirect
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('profile/', include('Profile.urls')),
+    path('hr/', include('assettracker.urls')),
     path('', lambda request: redirect('login')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]

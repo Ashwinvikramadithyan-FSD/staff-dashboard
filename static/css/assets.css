@@ -1,0 +1,68 @@
+body{
+background:#f5f7fb;
+font-family:Segoe UI;
+padding:30px;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.add-btn{
+background:#2563eb;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+text-decoration:none;
+}
+
+.asset-grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fill,minmax(280px,1fr));
+gap:25px;
+}
+
+.asset-card{
+background:white;
+border-radius:18px;
+padding:20px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.asset-card img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:12px;
+}
+
+.asset-card h3{
+margin-top:15px;
+}
+
+.status{
+display:inline-block;
+background:#22c55e;
+color:white;
+padding:5px 10px;
+border-radius:8px;
+margin-top:10px;
+}
+
+.buttons{
+margin-top:15px;
+display:flex;
+gap:10px;
+}
+
+.buttons a{
+padding:8px 15px;
+border-radius:8px;
+text-decoration:none;
+color:white;
+background:#2563eb;
+}

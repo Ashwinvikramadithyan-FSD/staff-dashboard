@@ -1,0 +1,82 @@
+/* ADD ASSET / UPDATE ASSET — Mobile First */
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+body{
+    background:#f4f7fc;
+    font-family:'Segoe UI',sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:20px 16px;
+}
+
+.form-card{
+    background:white;
+    width:100%;
+    max-width:500px;
+    padding:28px 22px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    margin:auto;
+}
+
+.form-card h2{
+    text-align:center;
+    margin-bottom:20px;
+    color:#1e293b;
+    font-size:1.3rem;
+}
+
+.form-card p{
+    margin-bottom:14px;
+}
+
+.form-card label{
+    display:block;
+    margin-bottom:5px;
+    font-weight:600;
+    font-size:0.9rem;
+    color:#374151;
+}
+
+.form-card input,
+.form-card textarea,
+.form-card select{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    margin-top:4px;
+    font-size:15px;
+}
+
+.form-card input:focus,
+.form-card textarea:focus,
+.form-card select:focus{
+    outline:none;
+    border-color:#2563eb;
+}
+
+.form-card button{
+    width:100%;
+    padding:13px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    margin-top:8px;
+}
+
+.form-card button:hover{
+    background:#1d4ed8;
+}
+
+@media(max-width:480px){
+    body{ padding:14px 10px; }
+    .form-card{ padding:20px 14px; border-radius:14px; }
+    .form-card h2{ font-size:1.1rem; }
+}
